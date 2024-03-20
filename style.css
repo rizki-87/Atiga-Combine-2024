@@ -1,0 +1,23 @@
+/* Background untuk halaman Monitoring Dump Truck */
+.dump-truck-bg {
+    background-color: #4e9c81; /* Hijau kebiruan */
+    /* Untuk gradient, hapus baris di atas dan gunakan ini: */
+    /* background: linear-gradient(to right, #4e9c81, #c9d6a3); */
+}
+
+/* Background untuk halaman Monitoring Alat Berat */
+.alat-berat-bg {
+    background-color: #f2f2f2; /* Warna abu-abu muda */
+    /* Untuk gradient, hapus baris di atas dan gunakan ini: */
+    /* background: linear-gradient(to right, #f2f2f2, #bcbcbc); */
+}
+
+/* Contoh kode untuk mengubah warna teks */
+.text-custom {
+    color: #ffffff; /* Warna teks putih */
+}
+
+/* Contoh untuk mengatur warna border */
+.border-custom {
+    border-color: #333333; /* Warna border hitam */
+}
