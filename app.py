@@ -36,4 +36,8 @@ def main():
             st.error("Data could not be loaded. Please check your data source.")
 
     elif page == 'Monitoring Heavy Equipment':
-        st.header('
+        st.header('Monitoring Heavy Equipment')
+st.info("This page is currently under construction. Please check back later.")
+
+if name == "main":
+main()
