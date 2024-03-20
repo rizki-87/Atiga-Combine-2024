@@ -37,7 +37,7 @@ def main():
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Heavy Equipment')
-st.info("This page is currently under construction. Please check back later.")
+        st.info("This page is currently under construction. Please check back later.")
 
 if __name__ == "__main__":
     main()
