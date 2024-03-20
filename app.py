@@ -6,7 +6,7 @@ from datetime import timedelta
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
 # Using st.cache to cache the data with ttl
-@st.cache(ttl=timedelta(minutes=5), allow_output_mutation=True)
+@st.cache(ttl=300.0, allow_output_mutation=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
