@@ -6,17 +6,20 @@ from datetime import timedelta
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
 # Using st.cache to cache the data with ttl
-@st.cache(ttl=300.0, allow_output_mutation=True)
+@st.cache(ttl=timedelta(minutes=5).total_seconds(), allow_output_mutation=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
         return df
     except Exception as e:
-        st.error(f"Failed to load data: {e}")
+        st.error(f"Gagal memuat data: {e}")
         return None
 
 def main():
     st.title('Dashboard Monitoring')
+
+    # Menambahkan logo perusahaan
+    st.image('atiga.png', width=200)
 
     # Button for refreshing data
     if st.button('Refresh Data'):
