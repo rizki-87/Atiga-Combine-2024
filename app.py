@@ -16,16 +16,19 @@ def load_data(url):
         return None
 
 def main():
-    st.title('Dashboard Monitoring')
-
-    # Menambahkan logo perusahaan
-    st.image('atiga.png', width=200)
-
-    # Button for refreshing data
-    if st.button('Refresh Data'):
-        st.legacy_caching.clear_cache()  # Clear all the cache
-        st.rerun()  # Rerun the script to load the latest data
-
+    # Set layout to wide mode and initialize the page with a title and favicon
+    st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
+    
+    # Use columns to create a layout for logo and title
+    col1, col2 = st.columns([1, 8])  # adjust the ratio as needed for your logo size and title alignment
+    
+    with col1:
+        # Place your logo at the first column
+        st.image('atiga.png', width=100)  # Adjust width as needed
+    
+    with col2:
+        st.title('Dashboard Monitoring')
+    
     # Add page navigation using radio buttons
     page = st.sidebar.radio('Choose Page', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
 
@@ -37,6 +40,11 @@ def main():
             st.dataframe(data_dump_truck)  # Use st.dataframe for a better display
         else:
             st.error("Data could not be loaded. Please check your data source.")
+            
+        # Button for refreshing data
+        if st.button('Refresh Data'):
+            st.legacy_caching.clear_cache()  # Clear all the cache
+            st.rerun()  # Rerun the script to load the latest data
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Heavy Equipment')
