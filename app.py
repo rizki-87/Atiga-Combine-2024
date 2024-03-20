@@ -39,5 +39,5 @@ def main():
         st.header('Monitoring Heavy Equipment')
 st.info("This page is currently under construction. Please check back later.")
 
-if name == "main":
+if __name__ == "__main__":
     main()
