@@ -3,10 +3,6 @@ import pandas as pd
 import requests
 from datetime import timedelta
 
-# Fungsi untuk mengambil CSS dari file di GitHub dan menerapkannya
-def remote_css(url):
-    st.markdown(f'<style>{requests.get(url).text}</style>', unsafe_allow_html=True)
-
 # Menggunakan st.experimental_memo untuk caching dengan ttl
 @st.experimental_memo(ttl=timedelta(minutes=5))
 def load_data(url):
@@ -16,13 +12,6 @@ def load_data(url):
     except Exception as e:
         st.error(f"Failed to load data: {e}")
         return None
-
-def main():
-    # Asumsikan URL berikut adalah URL mentah dari file style.css Anda di GitHub
-    css_url = 'https://raw.githubusercontent.com/rizki-87/Atiga-Combine-2024/main/style.css'
-    
-    # Terapkan CSS Anda di awal main function
-    remote_css(css_url)
 
     st.title('Dashboard Monitoring')
 
