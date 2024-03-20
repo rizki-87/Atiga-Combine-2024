@@ -1,6 +1,24 @@
 import streamlit as st
 import pandas as pd
+import requests
 from datetime import timedelta
+
+# Fungsi untuk mengambil CSS dari file dan menerapkannya
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+# Atau, jika CSS Anda di-hosting online (misalnya di GitHub)
+def remote_css(url):
+    st.markdown(f'<style>{requests.get(url).text}</style>', unsafe_allow_html=True)
+
+def main():
+    # Terapkan CSS Anda disini
+    local_css('style.css')  # Jika file CSS lokal di direktori yang sama
+    # atau
+    # remote_css('https://raw.githubusercontent.com/user/repo/branch/style.css')  # Ganti dengan URL file CSS Anda
+
+    # Kode Streamlit lainnya di sini
 
 # Menggunakan st.experimental_memo untuk caching dengan ttl
 @st.experimental_memo(ttl=timedelta(minutes=5))
