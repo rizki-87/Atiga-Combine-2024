@@ -37,7 +37,7 @@ def main():
     if page == 'Monitoring Dump Truck':
         st.header('Monitoring Dump Truck')
         # Memuat data dump truck
-        data_dump_truck = load_data(sheet_url_dump_truck)
+        data_dump_truck = load_data('https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv')
         if data_dump_truck is not None:
             st.write(data_dump_truck)
         else:
