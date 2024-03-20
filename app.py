@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 from datetime import timedelta
 
-# URL Google Sheets untuk masing-masing halaman
+# URL Google Sheets for each page
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
-# Menggunakan st.cache untuk caching dengan ttl
+# Using st.cache to cache the data with ttl
 @st.cache(ttl=timedelta(minutes=5), allow_output_mutation=True)
 def load_data(url):
     try:
@@ -18,26 +18,22 @@ def load_data(url):
 def main():
     st.title('Dashboard Monitoring')
 
-    # Tombol untuk refresh data
+    # Button for refreshing data
     if st.button('Refresh Data'):
-        st.legacy_caching.clear_cache()  # Membersihkan semua cache
-        st.rerun()  # Menjalankan ulang script untuk memuat data terbaru
+        st.legacy_caching.clear_cache()  # Clear all the cache
+        st.rerun()  # Rerun the script to load the latest data
 
-    # Menambahkan navigasi halaman menggunakan radio buttons
-    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Alat Berat'])
+    # Add page navigation using radio buttons
+    page = st.sidebar.radio('Choose Page', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
 
     if page == 'Monitoring Dump Truck':
         st.header('Monitoring Dump Truck')
-        # Memuat data dump truck
+        # Load the dump truck data
         data_dump_truck = load_data(sheet_url_dump_truck)
         if data_dump_truck is not None:
-            st.dataframe(data_dump_truck)  # Menggunakan st.dataframe untuk tampilan yang lebih baik
+            st.dataframe(data_dump_truck)  # Use st.dataframe for a better display
         else:
-            st.error("Data tidak bisa dimuat. Silakan cek kembali sumber data Anda.")
+            st.error("Data could not be loaded. Please check your data source.")
 
-    elif page == 'Monitoring Alat Berat':
-        st.header('Monitoring Alat Berat')
-        st.info("Halaman ini sedang dalam pengembangan. Silakan kembali lagi nanti.")
-
-if __name__ == "__main__":
-    main()
+    elif page == 'Monitoring Heavy Equipment':
+        st.header('
