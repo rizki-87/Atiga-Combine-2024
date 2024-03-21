@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime
+import matplotlib.pyplot as plt  # Corrected import statement
+from datetime import datetime, timedelta  # Import timedelta as well
 
 # URL Google Sheets untuk setiap halaman
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
