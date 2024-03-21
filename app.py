@@ -38,7 +38,7 @@ def main():
     if page == 'Monitoring Dump Truck':
         # Code for 'Monitoring Dump Truck' page...
 
-elif page == 'Monitoring Heavy Equipment':
+        elif page == 'Monitoring Heavy Equipment':
         # Code for 'Monitoring Heavy Equipment' page...
 
 if __name__ == "__main__":
