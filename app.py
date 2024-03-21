@@ -18,12 +18,12 @@ def load_data(url):
         return None
 
 def filter_data(df, start_date, end_date, status, jenis):
-    # Ensure start_date and end_date are treated as pandas timestamps
+    # Ensure that start_date and end_date are of the same type as the 'TANGGAL' column
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
-
+    
     # Filter by date range
-    filtered_df = df[(df['TANGGAL'].dt.date >= start_date.date()) & (df['TANGGAL'].dt.date <= end_date.date())]
+    filtered_df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
     
     # Filter by status, if not 'All'
     if status != 'All':
