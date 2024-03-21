@@ -42,7 +42,28 @@ def main():
             with col4:
                 jenis_option = st.selectbox('Pilih Jenis DT', ['All', 'DT Loading', 'DT Produksi','DT Support Operasional'])
             
-            # Add your code here to display the dataframe or other elements
+           # Create a container for the visualizations
+    with st.container():
+        # First visualization: Pie Chart for the Distribution of DT Status
+        status_dt_counts = df['STATUS DT'].value_counts()
+
+        # Create a column layout inside the container
+        col1, col2 = st.columns(2)
+
+         # First column for the first pie chart
+        with col1:
+            st.subheader("Distribusi Status DT")
+            fig1, ax1 = plt.subplots()
+            ax1.pie(status_dt_counts, labels=status_dt_counts.index, autopct='%1.1f%%', startangle=140)
+            ax1.set_title('Distribusi Status DT')
+            st.pyplot(fig1)
+        with col2:
+            jenis_dt_status_counts = df.groupby(['JENIS DT', 'STATUS DT']).size().unstack(fill_value=0)
+            jenis_dt_status_counts.plot(kind='barh', stacked=True, figsize=(10, 7))
+            plt.title('Distribusi Status DT Berdasarkan Jenis DT')
+            plt.xlabel('Jumlah')
+            plt.ylabel('Jenis DT')
+            plt.show()
 
     elif page == 'Monitoring Heavy Equipment':
         # No title container for the "Monitoring Heavy Equipment" page
