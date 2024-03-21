@@ -57,7 +57,7 @@ def main():
                     # First column for the first pie chart
                     with col1:
                         st.subheader("Distribusi Status DT")
-                        fig1, ax1 = plt.subplots()
+                        fig1, ax1 = plt.subplots(figsize=(8, 6))
                         ax1.pie(status_dt_counts, labels=status_dt_counts.index, autopct='%1.1f%%', startangle=140)
                         ax1.set_title('Distribusi Status DT')
                         st.pyplot(fig1)
@@ -66,7 +66,7 @@ def main():
                         try:
                             st.subheader("Distribusi Status DT Berdasarkan Jenis DT")
                             jenis_dt_status_counts = df.groupby(['JENIS DT', 'STATUS DT']).size().unstack(fill_value=0)
-                            fig2, ax2 = plt.subplots()
+                            fig2, ax2 = plt.subplots(figsize=(8, 6)) 
                             jenis_dt_status_counts.plot(kind='barh', stacked=True, ax=ax2)
                             ax2.set_title('Distribusi Status DT Berdasarkan Jenis DT')
                             ax2.set_xlabel('Jumlah')
