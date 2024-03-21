@@ -17,19 +17,19 @@ def load_data(url):
         st.error(f"Gagal memuat data: {e}")
         return None
 
-def filter_data(df, start_date, end_date, status, jenis):
-    # Filter by date range
-    filtered_df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+# def filter_data(df, start_date, end_date, status, jenis):
+#     # Filter by date range
+#     filtered_df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
     
-    # Filter by status, if not 'All'
-    if status != 'All':
-        filtered_df = filtered_df[filtered_df['STATUS DT'] == status]
+#     # Filter by status, if not 'All'
+#     if status != 'All':
+#         filtered_df = filtered_df[filtered_df['STATUS DT'] == status]
     
-    # Filter by jenis DT, if not 'All'
-    if jenis != 'All':
-        filtered_df = filtered_df[filtered_df['JENIS DT'] == jenis]
+#     # Filter by jenis DT, if not 'All'
+#     if jenis != 'All':
+#         filtered_df = filtered_df[filtered_df['JENIS DT'] == jenis]
     
-    return filtered_df
+#     return filtered_df
 
 def main():
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
