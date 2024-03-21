@@ -18,9 +18,9 @@ def load_data(url):
         return None
 
 def filter_data(df, start_date, end_date, status, jenis):
-    # Convert date objects to datetime
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
+    # Convert start_date and end_date to pandas.Timestamp to ensure compatibility with pandas datetime64
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
     
     # Filter by date range
     filtered_df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
@@ -34,6 +34,7 @@ def filter_data(df, start_date, end_date, status, jenis):
         filtered_df = filtered_df[filtered_df['JENIS DT'] == jenis]
     
     return filtered_df
+
 
 
 def main():
