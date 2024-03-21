@@ -5,12 +5,10 @@ from datetime import timedelta, datetime
 # URL Google Sheets untuk setiap halaman
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
-# Gunakan @st.experimental_memo dengan ttl
 @st.experimental_memo(ttl=timedelta(minutes=5).total_seconds())
 def load_data(url):
     try:
         df = pd.read_csv(url)
-        # Convert 'TANGGAL' column to datetime format
         df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], errors='coerce')
         return df
     except Exception as e:
@@ -18,13 +16,9 @@ def load_data(url):
         return None
 
 def main():
-    # Mengatur layout menjadi mode lebar dan menginisialisasi halaman dengan judul dan favicon
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
+    st.sidebar.image('atiga.png', width=300)
     
-    # Menempatkan logo di sidebar atas
-    st.sidebar.image('atiga.png', width=300)  # Sesuaikan lebar sesuai kebutuhan
-    
-    # Container untuk judul dengan border
     with st.container():
         st.markdown("""
         <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
@@ -32,17 +26,18 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
-    # Menambahkan navigasi halaman menggunakan radio buttons di sidebar
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
     
     if page == 'Monitoring Dump Truck':
         # Code for 'Monitoring Dump Truck' page...
-
-        elif page == 'Monitoring Heavy Equipment':
+        pass  # Replace this with actual code to handle this page
+    elif page == 'Monitoring Heavy Equipment':
         # Code for 'Monitoring Heavy Equipment' page...
+        pass  # Replace this with actual code to handle this page
 
 if __name__ == "__main__":
     main()
+
 
 
 
