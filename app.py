@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import timedelta
+from datetime import datetime
 
 # URL Google Sheets untuk setiap halaman
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
@@ -10,6 +10,7 @@ sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSD
 def load_data(url):
     try:
         df = pd.read_csv(url)
+        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], errors='coerce')  # Ensure the 'TANGGAL' column is datetime
         return df
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
@@ -29,17 +30,20 @@ def main():
                 <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
             </div>
             """, unsafe_allow_html=True)
-        # Creating a three-column layout for inputs
+            
             col1, col2, col3 = st.columns(3)
-        with col1:
+            with col1:
                 start_date = st.date_input('Tanggal Mulai', datetime.today())
-        with col2:
+            with col2:
                 end_date = st.date_input('Tanggal Akhir', datetime.today())
-        with col3:
+            with col3:
                 status_option = st.selectbox('Pilih Status DT', ['All', 'Ready', 'Rusak', 'Rusak Berat']) # Update with your options
                 jenis_option = st.selectbox('Pilih Jenis DT', ['All', 'DT Loading', 'DT Produksi','DT Support Operasional']) # Update with your options
             
-    elif page == 'Monitoring Alat Berat':
+            # Add your code here to display the dataframe or other elements
+
+    elif page == 'Monitoring Heavy Equipment':
+        # No title container for the "Monitoring Heavy Equipment" page
         st.header('Monitoring Alat Berat')
         st.info("Halaman ini sedang dalam pembangunan. Silakan kembali lagi nanti.")
 
