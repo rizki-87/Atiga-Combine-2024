@@ -32,8 +32,9 @@ def main():
         # Code for 'Monitoring Dump Truck' page...
         pass  # Replace this with actual code to handle this page
     elif page == 'Monitoring Heavy Equipment':
-        # Code for 'Monitoring Heavy Equipment' page...
-        pass  # Replace this with actual code to handle this page
+        st.header('Monitoring Heavy Equipment')
+        st.info("Halaman ini sedang dalam pembangunan. Silakan kembali lagi nanti.")
+
 
 if __name__ == "__main__":
     main()
