@@ -18,6 +18,10 @@ def load_data(url):
         return None
 
 def filter_data(df, start_date, end_date, status, jenis):
+    # Convert date objects to datetime
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+    
     # Filter by date range
     filtered_df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
     
@@ -30,6 +34,7 @@ def filter_data(df, start_date, end_date, status, jenis):
         filtered_df = filtered_df[filtered_df['JENIS DT'] == jenis]
     
     return filtered_df
+
 
 def main():
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
