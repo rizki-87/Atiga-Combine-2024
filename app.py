@@ -86,11 +86,6 @@ def main():
         # else:
         #     st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
             
-        # Tombol untuk memperbarui data
-        if st.button('Muat Ulang Data'):
-            st.legacy_caching.clear_cache()  # Membersihkan semua cache
-            st.rerun()  # Menjalankan ulang skrip untuk memuat data terbaru
-
     elif page == 'Monitoring Alat Berat':
         st.header('Monitoring Alat Berat')
         st.info("Halaman ini sedang dalam pembangunan. Silakan kembali lagi nanti.")
