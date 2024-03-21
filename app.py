@@ -31,7 +31,7 @@ def main():
             </div>
             """, unsafe_allow_html=True)
             
-            col1, col2, col3 = st.columns([1,1,1])  # Misalnya, bagi ruang menjadi sama rata
+            col1, col2, col3, col4 = st.columns([1,1,1,1])  # Misalnya, bagi ruang menjadi sama rata
             
             with col1:
                 start_date = st.date_input('Tanggal Mulai', datetime.today())
@@ -39,6 +39,7 @@ def main():
                 end_date = st.date_input('Tanggal Akhir', datetime.today())
             with col3:
                 status_option = st.selectbox('Pilih Status DT', ['All', 'Ready', 'Rusak', 'Rusak Berat'])
+            with col4:
                 jenis_option = st.selectbox('Pilih Jenis DT', ['All', 'DT Loading', 'DT Produksi','DT Support Operasional'])
             
             # Add your code here to display the dataframe or other elements
