@@ -5,12 +5,13 @@ from datetime import timedelta, datetime
 # URL Google Sheets untuk setiap halaman
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
-# Gunakan @st.experimental_memo dengan ttl
+# Update @st.cache to @st.experimental_memo
 @st.experimental_memo(ttl=timedelta(minutes=5).total_seconds())
 def load_data(url):
     try:
         df = pd.read_csv(url)
-        # Asumsikan kolom status dan jenis sudah ada di dataframe
+        # Convert 'TANGGAL' column to datetime format
+        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], errors='coerce')
         return df
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
@@ -51,7 +52,8 @@ def main():
                     filtered_data = filtered_data[filtered_data['STATUS DT'] == status_options]
                 if jenis_options != 'All':
                     filtered_data = filtered_data[filtered_data['JENIS DT'] == jenis_options]
-                filtered_data = filtered_data[(filtered_data['TANGGAL'] >= start_date) & (filtered_data['TANGGAL'] <= end_date)]
+                # Make sure 'TANGGAL' is in datetime format before comparing
+                filtered_data = filtered_data[(filtered_data['TANGGAL'] >= pd.to_datetime(start_date)) & (filtered_data['TANGGAL'] <= pd.to_datetime(end_date))]
                 
                 st.dataframe(filtered_data)  # Tampilkan data yang difilter
             else:
@@ -63,6 +65,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 # import streamlit as st
