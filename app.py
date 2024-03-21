@@ -63,8 +63,12 @@ def main():
                         st.pyplot(fig1)
 
                     with col2:
-                        # Assuming you will add another visualization here.
-                        pass
+                        jenis_dt_status_counts = df.groupby(['JENIS DT', 'STATUS DT']).size().unstack(fill_value=0)
+                        jenis_dt_status_counts.plot(kind='barh', stacked=True, figsize=(10, 7))
+                        plt.title('Distribusi Status DT Berdasarkan Jenis DT')
+                        plt.xlabel('Jumlah')
+                        plt.ylabel('Jenis DT')
+                        plt.show()
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Alat Berat')
