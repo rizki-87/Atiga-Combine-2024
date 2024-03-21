@@ -82,7 +82,7 @@ def main():
         # Memuat data dump truck
         data_dump_truck = load_data(sheet_url_dump_truck)
         if data_dump_truck is not None:
-            st.dataframe(data_dump_truck)  # Gunakan st.dataframe untuk tampilan yang lebih baik
+            # st.dataframe(data_dump_truck)  # Gunakan st.dataframe untuk tampilan yang lebih baik
         else:
             st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
             
