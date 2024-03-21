@@ -26,30 +26,36 @@ def main():
     # Menambahkan navigasi halaman menggunakan radio buttons di sidebar
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
     
-    # Container untuk input dan pemilih
-    with st.container():
-        st.markdown("""
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
-        """, unsafe_allow_html=True)
-        # Input tanggal
-        start_date = st.date_input('Tanggal Mulai', datetime.today())
-        end_date = st.date_input('Tanggal Akhir', datetime.today())
-        
-        # Muat data dump truck
-        data_dump_truck = load_data(sheet_url_dump_truck)
-        if data_dump_truck is not None:
-            # Pemilih untuk status DT
-            status_options = st.selectbox('Pilih Status DT', options=data_dump_truck['STATUS DT'].unique())
-            # Pemilih untuk jenis DT
-            jenis_options = st.selectbox('Pilih Jenis DT', options=data_dump_truck['JENIS DT'].unique())
-            st.markdown("</div>", unsafe_allow_html=True)  # Tutup div
+    if page == 'Monitoring Dump Truck':
+        # Container untuk input dan pemilih
+        with st.container():
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                start_date = st.date_input('Tanggal Mulai', datetime.today())
+            with col2:
+                end_date = st.date_input('Tanggal Akhir', datetime.today())
+            
+            # Muat data dump truck
+            data_dump_truck = load_data(sheet_url_dump_truck)
+            if data_dump_truck is not None:
+                with col3:
+                    # Pemilih untuk status DT
+                    status_options = st.selectbox('Pilih Status DT', ['All'] + list(data_dump_truck['STATUS DT'].unique()))
+                with col4:
+                    # Pemilih untuk jenis DT
+                    jenis_options = st.selectbox('Pilih Jenis DT', ['All'] + list(data_dump_truck['JENIS DT'].unique()))
 
-            # Filter data berdasarkan tanggal dan pemilih
-            filtered_data = data_dump_truck[(data_dump_truck['TANGGAL'] >= start_date) & (data_dump_truck['TANGGAL'] <= end_date) & (data_dump_truck['STATUS DT'] == status_options) & (data_dump_truck['JENIS DT'] == jenis_options)]
-            st.dataframe(filtered_data)  # Tampilkan data yang difilter
-        else:
-            st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
-            st.markdown("</div>", unsafe_allow_html=True)  # Tutup div jika data tidak ada
+                # Filter data berdasarkan tanggal dan pemilih
+                filtered_data = data_dump_truck
+                if status_options != 'All':
+                    filtered_data = filtered_data[filtered_data['STATUS DT'] == status_options]
+                if jenis_options != 'All':
+                    filtered_data = filtered_data[filtered_data['JENIS DT'] == jenis_options]
+                filtered_data = filtered_data[(filtered_data['TANGGAL'] >= start_date) & (filtered_data['TANGGAL'] <= end_date)]
+                
+                st.dataframe(filtered_data)  # Tampilkan data yang difilter
+            else:
+                st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Heavy Equipment')
