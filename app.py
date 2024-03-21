@@ -65,7 +65,7 @@ def main():
             plt.ylabel('Jenis DT')
             plt.show()
 
-    elif page == 'Monitoring Heavy Equipment':
+ elif page == 'Monitoring Heavy Equipment':
         # No title container for the "Monitoring Heavy Equipment" page
         st.header('Monitoring Alat Berat')
         st.info("Halaman ini sedang dalam pembangunan. Silakan kembali lagi nanti.")
