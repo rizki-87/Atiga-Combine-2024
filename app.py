@@ -80,7 +80,7 @@ def main():
     # Container untuk judul dengan border
     with st.container():
         st.markdown("""
-        <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288;">
+        <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
             <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
         </div>
         """, unsafe_allow_html=True)
