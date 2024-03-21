@@ -5,7 +5,7 @@ from datetime import timedelta
 # URL Google Sheets for each page
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
-# Using st.cache to cache the data with ttl
+# Menggunakan st.cache untuk menyimpan data dengan ttl
 @st.cache(ttl=timedelta(minutes=5).total_seconds(), allow_output_mutation=True)
 def load_data(url):
     try:
@@ -16,39 +16,35 @@ def load_data(url):
         return None
 
 def main():
-    # Set layout to wide mode and initialize the page with a title and favicon
+    # Mengatur layout menjadi mode lebar dan menginisialisasi halaman dengan judul dan favicon
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
     
-    # Use columns to create a layout for logo and title
-    col1, col2 = st.columns([1, 8])  # adjust the ratio as needed for your logo size and title alignment
+    # Menempatkan logo di sidebar atas
+    st.sidebar.image('atiga.png', width=150)  # Sesuaikan lebar sesuai kebutuhan
     
-    with col1:
-        # Place your logo at the first column
-        st.image('atiga.png', width=100)  # Adjust width as needed
+    # Menambahkan navigasi halaman menggunakan radio buttons di sidebar
+    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
     
-    with col2:
-        st.title('Dashboard Monitoring')
-    
-    # Add page navigation using radio buttons
-    page = st.sidebar.radio('Choose Page', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
+    # Judul di bagian utama setelah sidebar
+    st.title('Dashboard Monitoring')
 
     if page == 'Monitoring Dump Truck':
         st.header('Monitoring Dump Truck')
-        # Load the dump truck data
+        # Memuat data dump truck
         data_dump_truck = load_data(sheet_url_dump_truck)
         if data_dump_truck is not None:
-            st.dataframe(data_dump_truck)  # Use st.dataframe for a better display
+            st.dataframe(data_dump_truck)  # Gunakan st.dataframe untuk tampilan yang lebih baik
         else:
-            st.error("Data could not be loaded. Please check your data source.")
+            st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
             
-        # Button for refreshing data
-        if st.button('Refresh Data'):
-            st.legacy_caching.clear_cache()  # Clear all the cache
-            st.rerun()  # Rerun the script to load the latest data
+        # Tombol untuk memperbarui data
+        if st.button('Muat Ulang Data'):
+            st.legacy_caching.clear_cache()  # Membersihkan semua cache
+            st.rerun()  # Menjalankan ulang skrip untuk memuat data terbaru
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Heavy Equipment')
-        st.info("This page is currently under construction. Please check back later.")
+        st.info("Halaman ini sedang dalam pembangunan. Silakan kembali lagi nanti.")
 
 if __name__ == "__main__":
     main()
