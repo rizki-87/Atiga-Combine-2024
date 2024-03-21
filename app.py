@@ -6,7 +6,7 @@ from datetime import datetime
 sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
 # Gunakan @st.experimental_memo dengan ttl
-@st.experimental_memo(ttl=timedelta(minutes=5).total_seconds())
+@st.cache_data(ttl=timedelta(minutes=5).total_seconds())
 def load_data(url):
     try:
         df = pd.read_csv(url)
