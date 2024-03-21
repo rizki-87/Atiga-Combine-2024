@@ -27,10 +27,10 @@ def main():
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
     
     # Judul di bagian utama setelah sidebar
-    st.title('Dashboard Monitoring')
+    st.title('Monitoring Ketersediaan dan Kondisi Dump Truck')
 
     if page == 'Monitoring Dump Truck':
-        st.header('Monitoring Dump Truck')
+        st.header('')
         # Memuat data dump truck
         data_dump_truck = load_data(sheet_url_dump_truck)
         if data_dump_truck is not None:
