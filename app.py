@@ -61,30 +61,19 @@ def load_data(url):
         return None
 
 def main():
-    # Mengatur layout menjadi mode lebar dan menginisialisasi halaman dengan judul dan favicon
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
-    
-    # Menempatkan logo di sidebar atas
-    st.sidebar.image('atiga.png', width=300)  # Sesuaikan lebar sesuai kebutuhan
-    
-    # Menambahkan navigasi halaman menggunakan radio buttons di sidebar
+    st.sidebar.image('atiga.png', width=300)
+
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
-    
-    # Container untuk judul dengan border
-    with st.container():
-        st.markdown("""
-        <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: -5px;">
-            <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
-        </div>
-        """, unsafe_allow_html=True)
 
     if page == 'Monitoring Dump Truck':
-        # Memuat data dump truck
-        data_dump_truck = load_data(sheet_url_dump_truck)
-        # if data_dump_truck is not None:
-            # st.dataframe(data_dump_truck)  # Gunakan st.dataframe untuk tampilan yang lebih baik
-        # else:
-        #     st.error("Data tidak dapat dimuat. Silakan periksa sumber data Anda.")
+        # Only create the title container for the "Monitoring Dump Truck" page
+        with st.container():
+            st.markdown("""
+            <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
+                <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
+            </div>
+            """, unsafe_allow_html=True)
             
     elif page == 'Monitoring Alat Berat':
         st.header('Monitoring Alat Berat')
