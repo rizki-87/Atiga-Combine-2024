@@ -63,12 +63,17 @@ def main():
                         st.pyplot(fig1)
 
                     with col2:
-                        jenis_dt_status_counts = df.groupby(['JENIS DT', 'STATUS DT']).size().unstack(fill_value=0)
-                        jenis_dt_status_counts.plot(kind='barh', stacked=True, figsize=(10, 7))
-                        plt.title('Distribusi Status DT Berdasarkan Jenis DT')
-                        plt.xlabel('Jumlah')
-                        plt.ylabel('Jenis DT')
-                        plt.show()
+                        try:
+                            st.subheader("Distribusi Status DT Berdasarkan Jenis DT")
+                            jenis_dt_status_counts = df.groupby(['JENIS DT', 'STATUS DT']).size().unstack(fill_value=0)
+                            fig2, ax2 = plt.subplots()
+                            jenis_dt_status_counts.plot(kind='barh', stacked=True, ax=ax2)
+                            ax2.set_title('Distribusi Status DT Berdasarkan Jenis DT')
+                            ax2.set_xlabel('Jumlah')
+                            ax2.set_ylabel('Jenis DT')
+                            st.pyplot(fig2)  # Render the bar chart
+                        except Exception as e:
+                            st.error(f"An error occurred in the second visualization: {e}")
 
     elif page == 'Monitoring Heavy Equipment':
         st.header('Monitoring Alat Berat')
