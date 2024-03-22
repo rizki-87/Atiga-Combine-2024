@@ -54,17 +54,18 @@ def show():
     # Initialize a container for inputs
     with st.container():
         # Date input
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3 = st.columns(4)
         with col1:
-            start_date = st.date_input('Tanggal Mulai', datetime.today())
-        with col2:
-            end_date = st.date_input('Tanggal Akhir', datetime.today())
+            min_date = datetime.datetime(2020,1,1)
+            max_date = datetime.date(2022,1,1)
+
+            a_date = st.date_input("Pick a date", (min_date, max_date))
         # Select box for 'STATUS DT'
-        with col3:
+        with col2:
             unique_status = df['STATUS DT'].unique().tolist()
             status_selected = st.selectbox('Pilih Status DT', ['All'] + unique_status)
         # Select box for 'JENIS DT'
-        with col4:
+        with col3:
             unique_jenis = df['JENIS DT'].unique().tolist()
             jenis_selected = st.selectbox('Pilih Jenis DT', ['All'] + unique_jenis)
 
