@@ -35,15 +35,43 @@ def show():
         </div>
         """, unsafe_allow_html=True)
 
-    # Muat data
+    # # Muat data
+    # df = load_data(sheet_url_dump_truck)
+    
+    # # Inisialisasi container untuk input
+    # with st.container():
+    #     col1, col2 = st.columns(2)
+    #     with col1:
+    #         start_date = st.date_input('Tanggal Mulai', datetime.today())
+    #     with col2:
+    #         end_date = st.date_input('Tanggal Akhir', datetime.today())
+
+# Muat data
     df = load_data(sheet_url_dump_truck)
     
-    # Inisialisasi container untuk input
+    # Initialize a container for inputs
     with st.container():
-        col1, col2 = st.columns(2)
+        # Date input
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
             start_date = st.date_input('Tanggal Mulai', datetime.today())
         with col2:
             end_date = st.date_input('Tanggal Akhir', datetime.today())
+        # Select box for 'STATUS DT'
+        with col3:
+            unique_status = df['STATUS DT'].unique().tolist()
+            status_selected = st.selectbox('Pilih Status DT', ['All'] + unique_status)
+        # Select box for 'JENIS DT'
+        with col4:
+            unique_jenis = df['JENIS DT'].unique().tolist()
+            jenis_selected = st.selectbox('Pilih Jenis DT', ['All'] + unique_jenis)
+
+    # Filter the data based on user selection
+    if not df.empty:
+        if status_selected != 'All':
+            df = df[df['STATUS DT'] == status_selected]
+        if jenis_selected != 'All':
+            df = df[df['JENIS DT'] == jenis_selected]
+        filtered_df = filter_data(df, start_date, end_date)
 
 
