@@ -37,17 +37,6 @@ def show():
         </div>
         """, unsafe_allow_html=True)
 
-    # # Muat data
-    # df = load_data(sheet_url_dump_truck)
-    
-    # # Inisialisasi container untuk input
-    # with st.container():
-    #     col1, col2 = st.columns(2)
-    #     with col1:
-    #         start_date = st.date_input('Tanggal Mulai', datetime.today())
-    #     with col2:
-    #         end_date = st.date_input('Tanggal Akhir', datetime.today())
-
 # Muat data
     df = load_data(sheet_url_dump_truck)
     
@@ -56,9 +45,8 @@ def show():
         # Date input
         col1, col2, col3 = st.columns(4)
         with col1:
-            min_date = datetime.datetime(2020,1,1)
-            max_date = datetime.date(2022,1,1)
-
+            min_date = datetime.datetime(2024,1,1)
+            max_date = datetime.date(2024,12,1)
             a_date = st.date_input("Pick a date", (min_date, max_date))
         # Select box for 'STATUS DT'
         with col2:
