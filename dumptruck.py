@@ -46,15 +46,4 @@ def show():
         with col2:
             end_date = st.date_input('Tanggal Akhir', datetime.today())
 
-# Filter data berdasarkan tanggal yang dipilih pengguna
-    if not df.empty:
-        filtered_df = filter_data(df, start_date, end_date)
 
-        # Tempatkan kode visualisasi/chart Anda di sini
-        # ...
-        # Misalnya, membuat pie chart untuk distribusi status dump truck
-        status_counts = filtered_df['STATUS DT'].value_counts()
-        fig, ax = plt.subplots()
-        ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
-        ax.set_title('Distribusi Status Dump Truck')
-        st.pyplot(fig)
