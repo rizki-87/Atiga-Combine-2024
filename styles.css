@@ -1,0 +1,23 @@
+/* Mengatur judul */
+.judul {
+  margin-bottom: 20px; /* Atau sesuaikan dengan kebutuhan */
+}
+
+/* Mengatur kontainer */
+.container {
+  padding: 20px;
+  margin: 10px; /* Atau sesuaikan untuk memberikan jarak antar kontainer */
+}
+
+/* Menggunakan Flexbox */
+.flex-container {
+  display: flex;
+  justify-content: space-between; /* Ini menyebarkan kontainer secara merata */
+}
+
+/* Menggunakan Grid */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 kolom dengan ukuran yang sama */
+  grid-gap: 20px; /* Jarak antar kolom */
+}
