@@ -4,7 +4,7 @@ import importlib.util
 def load_module(page_name):
     if page_name == 'Monitoring Dump Truck':
         page_path = 'dumptruck.py'
-    elif page_name == 'Monitoring Heavy Equipment':
+    elif page_name == 'Monitoring Alat Berat':
         page_path = 'alatberat.py'
     else:
         raise ValueError(f"Unknown page {page_name}")
@@ -17,7 +17,7 @@ def load_module(page_name):
 def main():
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
     st.sidebar.image('atiga.png', width=300)
-    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
+    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Alat Berat'])
 
     page_module = load_module(page)
     page_module.show()
