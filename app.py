@@ -1,7 +1,7 @@
 import streamlit as st
-# import importlib.util
-import dumptruck
-import alatberat
+import importlib.util
+# import dumptruck
+# import alatberat
 
 def load_module(page_name):
     if page_name == 'Monitoring Dump Truck':
