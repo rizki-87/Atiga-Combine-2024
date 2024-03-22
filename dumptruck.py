@@ -46,17 +46,17 @@ def show():
             unique_jenis = df['JENIS DT'].unique().tolist() if not df.empty else []
             jenis_selected = st.selectbox('Pilih Jenis DT', ['All'] + unique_jenis)
 
-# Filtering data
-df_filtered = df[
-    (df['TANGGAL'] >= pd.Timestamp(min_date)) &
-    (df['TANGGAL'] <= pd.Timestamp(max_date)) &
-    (df['JENIS DT'].isin(jenis_dt_selected)) &
-    (df['STATUS DT'].isin(status_dt_selected))
-]
+# # Filtering data
+# df_filtered = df[
+#     (df['TANGGAL'] >= pd.Timestamp(min_date)) &
+#     (df['TANGGAL'] <= pd.Timestamp(max_date)) &
+#     (df['JENIS DT'].isin(jenis_dt_selected)) &
+#     (df['STATUS DT'].isin(status_dt_selected))
+# ]
 
-# Pie chart for STATUS DT distribution
-fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
-st.plotly_chart(fig)
+# # Pie chart for STATUS DT distribution
+# fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
+# st.plotly_chart(fig)
 
 
 
