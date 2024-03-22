@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoring Dump Truck</title>
+<style>
+  /* Menambahkan padding pada body untuk menghindari konten menempel di tepi */
+  body {
+    padding: 20px;
+    font-family: Arial, sans-serif; /* Menggunakan font yang umum */
+  }
+
+  /* Mengatur judul dengan margin yang lebih besar */
+  .judul {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 40px; /* Mengatur jarak antara judul dan konten di bawahnya */
+  }
+
+  /* Mengatur container agar memiliki jarak di antaranya */
+  .container {
+    background-color: #f0f0f0; /* Warna latar belakang untuk container */
+    border-radius: 5px; /* Memberikan sudut yang bulat pada container */
+    padding: 20px; /* Padding di dalam container */
+    margin-bottom: 20px; /* Jarak antara kontainer */
+  }
+
+  /* Mengatur lebar dan margin untuk container utama */
+  .main-container {
+    max-width: 1200px; /* Mengatur lebar maksimal */
+    margin: 0 auto; /* Membuat container berada di tengah */
+  }
+
+  /* Styling untuk tombol atau input */
+  .button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  /* Mengatur form dan input fields */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+  <!-- Judul Halaman -->
+  <div class="judul">Monitoring Ketersediaan dan Kondisi Dump Truck</div>
+
+  <!-- Kontainer untuk form -->
+  <div class="container">
+    <form action="/action_page.php">
+      <div class="form-group">
+        <label for="tgl_mulai">Tanggal Mulai:</label>
+        <input type="text" id="tgl_mulai" name="tanggal_mulai" placeholder="yyyy/mm/dd">
+      </div>
+      <div class="form-group">
+        <label for="tgl_akhir">Tanggal Akhir:</label>
+        <input type="text" id="tgl_akhir" name="tanggal_akhir" placeholder="yyyy/mm/dd">
+      </div>
+      <div class="form-group">
+        <label for="status_dt">Pilih Status DT:</label>
+        <select id="status_dt" name="status_dt">
+          <option value="all">All</option>
+          <!-- Tambahkan opsi lain di sini -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="jenis_dt">Pilih Jenis DT:</label>
+        <select id="jenis_dt" name="jenis_dt">
+          <option value="all">All</option>
+          <!-- Tambahkan opsi lain di sini -->
+        </select>
+      </div>
+      <input type="submit" value="Submit" class="button">
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
