@@ -66,12 +66,6 @@ def show():
             unique_jenis = df['JENIS DT'].unique().tolist()
             jenis_selected = st.selectbox('Pilih Jenis DT', ['All'] + unique_jenis)
 
-    # Filter the data based on user selection
-    if not df.empty:
-        if status_selected != 'All':
-            df = df[df['STATUS DT'] == status_selected]
-        if jenis_selected != 'All':
-            df = df[df['JENIS DT'] == jenis_selected]
-        filtered_df = filter_data(df, start_date, end_date)
+
 
 
