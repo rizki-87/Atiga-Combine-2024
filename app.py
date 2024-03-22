@@ -9,10 +9,15 @@ def load_module(page_name):
     else:
         raise ValueError(f"Unknown page {page_name}")
 
-    spec = importlib.util.spec_from_file_location(page_name, page_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    try:
+        spec = importlib.util.spec_from_file_location(page_name, page_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    except Exception as e:
+        st.error(f"Failed to load module {page_name}: {e}")
+        return None
+
 
 def main():
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
@@ -20,7 +25,8 @@ def main():
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
 
     page_module = load_module(page)
-    page_module.show()
+    if page_module is not None:
+        page_module.show()
 
 if __name__ == "__main__":
     main()
