@@ -15,12 +15,14 @@ def load_module(page_name):
     return module
 
 def main():
-    st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
-    st.sidebar.image('atiga.png', width=300)
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Alat Berat'])
 
-    page_module = load_module(page)
-    page_module.show()
+    if page == 'Monitoring Dump Truck':
+        import dumptruck
+        dumptruck.show()
+    elif page == 'Monitoring Alat Berat':
+        import alatberat
+        alatberat.show()
 
 if __name__ == "__main__":
     main()
