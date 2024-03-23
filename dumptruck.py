@@ -219,11 +219,21 @@ def show():
             st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
+    # Pastikan min_date dan max_date adalah objek datetime yang tepat
+    min_date = pd.to_datetime(min_date)
+    max_date = pd.to_datetime(max_date)
+
+    # Filter berdasarkan rentang tanggal
     df_filtered = df[(df['TANGGAL'] >= min_date) & (df['TANGGAL'] <= max_date)]
+
+    # Filter berdasarkan jenis DT jika tidak 'All'
     if jenis_dt_selected != 'All':
         df_filtered = df_filtered[df_filtered['JENIS DT'] == jenis_dt_selected]
+
+    # Filter berdasarkan status DT jika tidak 'All'
     if status_dt_selected != 'All':
         df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
+
     return df_filtered
 
 if __name__ == "__main__":
