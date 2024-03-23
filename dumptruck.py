@@ -55,10 +55,10 @@ def show():
         # else:
         #     st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
-          if not df_filtered.empty:
-               fig = px.pie(df_filtered, names='STATUS DT', values='STATUS DT', title='Distribusi STATUS DT')
-               st.plotly_chart(fig)
-          else:
+        if not df_filtered.empty:
+          fig = px.pie(df_filtered, names='STATUS DT', values='STATUS DT', title='Distribusi STATUS DT')
+          st.plotly_chart(fig)
+        else:
           st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 # Fungsi untuk filtering data
