@@ -49,11 +49,18 @@ def show():
         # st.write("Jumlah data setelah filter: " + str(len(df_filtered))) # Bisa dihapus jika tidak ingin menampilkan
 
         # Pie chart untuk distribusi STATUS DT jika ada data
-        if not df_filtered.empty:
-            fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
-            st.plotly_chart(fig)
-        else:
-            st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
+if not df_filtered.empty:
+    # Calculate the count for each STATUS DT
+    status_counts = df_filtered['STATUS DT'].value_counts()
+    fig = px.pie(df_filtered, 
+                 names='STATUS DT', 
+                 values=status_counts,  # This is the change to include nominal values
+                 title='Distribusi STATUS DT')
+    # Customization to display both percentage and nominal value in the chart
+    fig.update_traces(textinfo='percent+label+value')
+    st.plotly_chart(fig)
+else:
+    st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 # Fungsi untuk filtering data
 def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
