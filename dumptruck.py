@@ -48,18 +48,18 @@ def show():
         # Debug: Tampilkan jumlah data yang difilter
         # st.write("Jumlah data setelah filter: " + str(len(df_filtered))) # Bisa dihapus jika tidak ingin menampilkan
 
-        # # Pie chart untuk distribusi STATUS DT jika ada data
-        # if not df_filtered.empty:
-        #     fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
-        #     st.plotly_chart(fig)
-        # else:
-        #     st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
-
+        # Pie chart untuk distribusi STATUS DT jika ada data
         if not df_filtered.empty:
-          fig = px.pie(df_filtered, names='STATUS DT', values='STATUS DT', title='Distribusi STATUS DT')
-          st.plotly_chart(fig)
+            fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
+            st.plotly_chart(fig)
         else:
-          st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
+            st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
+
+        # if not df_filtered.empty:
+        #   fig = px.pie(df_filtered, names='STATUS DT', values='STATUS DT', title='Distribusi STATUS DT')
+        #   st.plotly_chart(fig)
+        # else:
+        #   st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 # Fungsi untuk filtering data
 def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
