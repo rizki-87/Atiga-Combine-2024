@@ -114,6 +114,10 @@ def show():
 
 # Fungsi untuk filtering data
 def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
+    # Konversi tanggal input ke pd.Timestamp
+    min_date = pd.Timestamp(min_date)
+    max_date = pd.Timestamp(max_date)
+    
     # Filter berdasarkan tanggal
     df_filtered = df[
         (df['TANGGAL'] >= min_date) &
@@ -121,15 +125,14 @@ def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
     ]
     # Filter berdasarkan jenis DT jika bukan 'All'
     if jenis_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['JENIS DT'] == jenis_dt_selected]
+        df_filtered = df_filtered[df_filtered['JENIS DT'].isin([jenis_dt_selected])]
     # Filter berdasarkan status DT jika bukan 'All'
     if status_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
+        df_filtered = df_filtered[df_filtered['STATUS DT'].isin([status_dt_selected])]
     return df_filtered
 
 if __name__ == "__main__":
     show()
-
 
 
 
