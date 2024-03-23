@@ -267,7 +267,7 @@ def show():
         df_filtered = filter_data(df, min_date, max_date, jenis_selected, status_selected)
 
         # Debug: Tampilkan jumlah data yang difilter
-        st.write(f"Jumlah data setelah filter: {len(df_filtered)}")
+        st.write("Jumlah data setelah filter: " + str(len(df_filtered)))
 
         # Debug: Tampilkan dataframe yang difilter jika ada data
         if not df_filtered.empty:
@@ -298,4 +298,9 @@ def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
 
     # Filter berdasarkan status DT jika bukan 'All'
     if status_dt_selected != 'All':
-        df
+        df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
+    
+    return df_filtered  # Pastikan untuk mengembalikan df_filtered
+
+if __name__ == "__main__":
+    show()
