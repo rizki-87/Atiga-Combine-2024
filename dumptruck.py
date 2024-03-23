@@ -14,28 +14,6 @@ def load_data(url):
         st.error(f"Gagal memuat data: {e}")
         return pd.DataFrame()
 
-# Fungsi untuk filtering data
-def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
-    # Konversi tanggal input ke pd.Timestamp
-    min_date = pd.Timestamp(min_date)
-    max_date = pd.Timestamp(max_date)
-
-    # Filter berdasarkan tanggal
-    df_filtered = df[
-        (df['TANGGAL'] >= min_date) &
-        (df['TANGGAL'] <= max_date)
-    ]
-
-    # Filter berdasarkan jenis DT jika bukan 'All'
-    if jenis_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['JENIS DT'] == jenis_dt_selected]
-
-    # Filter berdasarkan status DT jika bukan 'All'
-    if status_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
-    
-    return df_filtered
-
 # Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
 def show():
     st.markdown("""
@@ -72,15 +50,32 @@ def show():
 
         # Pie chart untuk distribusi STATUS DT jika ada data
         if not df_filtered.empty:
-            status_counts = df_filtered['STATUS DT'].value_counts()
-            fig = px.pie(df_filtered, 
-                         names='STATUS DT', 
-                         values=status_counts,
-                         title='Distribusi STATUS DT')
-            fig.update_traces(textinfo='percent+label+value')
+            fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
             st.plotly_chart(fig)
         else:
-            st.error("Tidak ada data yang sesuai dengan filter yang diberikan.")
+            st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
+
+# Fungsi untuk filtering data
+def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
+    # Konversi tanggal input ke pd.Timestamp
+    min_date = pd.Timestamp(min_date)
+    max_date = pd.Timestamp(max_date)
+
+    # Filter berdasarkan tanggal
+    df_filtered = df[
+        (df['TANGGAL'] >= min_date) &
+        (df['TANGGAL'] <= max_date)
+    ]
+
+    # Filter berdasarkan jenis DT jika bukan 'All'
+    if jenis_dt_selected != 'All':
+        df_filtered = df_filtered[df_filtered['JENIS DT'] == jenis_dt_selected]
+
+    # Filter berdasarkan status DT jika bukan 'All'
+    if status_dt_selected != 'All':
+        df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
+    
+    return df_filtered  # Pastikan untuk mengembalikan df_filtered
 
 if __name__ == "__main__":
     show()
