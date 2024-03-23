@@ -193,28 +193,27 @@ def show():
         df_filtered = filter_data(df, min_date, max_date, jenis_selected, status_selected)
 
         if not df_filtered.empty:
-            fig = make_subplots(rows=1, cols=2, specs=[[{"type": "xy"}, {"type": "domain"}]],
+            # Create the Trend Chart and Pie Chart in a combined figure
+            combined_fig = make_subplots(rows=1, cols=2, specs=[[{"type": "xy"}, {"type": "domain"}]],
                                 subplot_titles=('Trend STATUS DT', 'Distribusi STATUS DT'))
-            status_counts = df_filtered['STATUS DT'].value_counts().reset_index()
-            status_counts.columns = ['STATUS DT', 'count']
-            
-            # Line chart for Ready status
-            ready_df = df_filtered[df_filtered['STATUS DT'] == 'Ready']
-            ready_trend = ready_df.groupby('TANGGAL').size().reset_index(name='count')
-            fig.add_trace(go.Scatter(x=ready_trend['TANGGAL'], y=ready_trend['count'],
-                                     mode='lines', name='Ready Trend'), row=1, col=1)
-            
-            # Bar chart for other statuses
-            for status, count in status_counts.itertuples(index=False):
-                if status != 'Ready':
-                    fig.add_trace(go.Bar(x=[status], y=[count], name=status), row=1, col=1)
-            
-            # Pie chart for status distribution
-            fig.add_trace(go.Pie(labels=status_counts['STATUS DT'], values=status_counts['count'],
-                                 name='STATUS DT Distribution'), row=1, col=2)
-            
-            fig.update_layout(showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
+
+            # Creating a line chart for 'Ready' trend on the left side
+            ready_trend = df_filtered[df_filtered['STATUS DT'] == 'Ready'].groupby('TANGGAL').count()['STATUS DT']
+            combined_fig.add_trace(go.Scatter(x=ready_trend.index, y=ready_trend.values, mode='lines', name='Ready Trend'), row=1, col=1)
+
+            # Creating a bar chart for other statuses on the left side
+            for status in unique_status:
+                if status != 'Ready' and status != 'All':
+                    status_trend = df_filtered[df_filtered['STATUS DT'] == status].groupby('TANGGAL').count()['STATUS DT']
+                    combined_fig.add_trace(go.Bar(x=status_trend.index, y=status_trend.values, name=status), row=1, col=1)
+
+            # Creating a pie chart for status distribution on the right side
+            status_distribution = df_filtered['STATUS DT'].value_counts()
+            combined_fig.add_trace(go.Pie(labels=status_distribution.index, values=status_distribution.values, name='STATUS DT Distribution'), row=1, col=2)
+
+            combined_fig.update_layout(barmode='stack', showlegend=False)
+            st.plotly_chart(combined_fig, use_container_width=True)
+
         else:
             st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
