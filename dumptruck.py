@@ -7,7 +7,7 @@ import plotly.express as px
 def load_data(url):
     try:
         df = pd.read_csv(url)
-        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True, errors='coerce')  # Ubah format tanggal
+        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True, errors='coerce')
         return df
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
@@ -16,12 +16,11 @@ def load_data(url):
 # Fungsi untuk filtering data
 def filter_data(df, start_date, end_date, status_dt_selected):
     if start_date and end_date:
-        # Pastikan start_date dan end_date adalah pd.Timestamp
-        df = df[(df['TANGGAL'] >= pd.Timestamp(start_date)) & (df['TANGGAL'] <= pd.Timestamp(end_date))]
+        df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
 
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
-
+    
     return df
 
 # Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
@@ -34,24 +33,25 @@ def show():
 
     # URL Google Sheets untuk data Dump Truck
     sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
-    
+
     # Muat data
     df = load_data(sheet_url_dump_truck)
 
     # Inisialisasi container untuk input
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
-        if date_range:
+        if len(date_range) == 2:
             start_date, end_date = date_range
+        elif len(date_range) == 1:
+            start_date = end_date = date_range[0]
         else:
             start_date = end_date = None
+
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
-        # Jika tidak ada rentang tanggal yang dipilih, atur start_date dan end_date ke None
-        if len(date_range) != 2:
-            st.warning("Silakan pilih rentang tanggal.")
-            start_date = end_date = None
+        if not start_date or not end_date:
+            st.warning("Silakan pilih kedua tanggal awal dan akhir untuk range.")
 
     # Proses filtering data
     if start_date and end_date:
@@ -64,12 +64,11 @@ def show():
             fig.update_traces(textinfo='percent+label+value')
             st.plotly_chart(fig)
         else:
-            st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
-    else:
-        st.info("Data tidak akan ditampilkan sampai tanggal dipilih.")
+            st.error("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 if __name__ == "__main__":
     show()
+
 
 
 
