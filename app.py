@@ -24,7 +24,7 @@ def load_module(page_name):
 def main():
     st.set_page_config(page_title='Dashboard Monitoring', page_icon=':truck:', layout='wide')
     st.sidebar.image('atiga.png', width=300)
-    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Heavy Equipment'])
+    page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Alat Berat'])
 
     page_module = load_module(page)
     if page_module is not None:
