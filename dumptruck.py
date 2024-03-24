@@ -18,12 +18,13 @@ def load_data(url):
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, start_date, end_date, status_dt_selected):
-    # Filter berdasarkan tanggal jika start_date dan end_date diberikan
-    if start_date and end_date:
-        df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+def filter_data(df, date_range, status_dt_selected):
+    if date_range:
+        start_date, end_date = date_range
+        # Pastikan start_date dan end_date adalah tanggal yang valid sebelum filter
+        if pd.notnull(start_date) and pd.notnull(end_date):
+            df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
 
-    # Filter berdasarkan status DT jika tidak 'All'
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
     
@@ -47,16 +48,15 @@ def show():
     with st.container():
         # Input range tanggal dengan default hari ini
         date_range = st.date_input("Pilih Tanggal", [])
-        if date_range:
-            start_date, end_date = date_range
-        else:
-            start_date = end_date = pd.to_datetime('today')
+        
+        if not date_range:
+            date_range = (pd.to_datetime('today'), pd.to_datetime('today'))  # Default ke hari ini jika tidak ada input
 
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
     # Proses filtering data
-    df_filtered = filter_data(df, start_date, end_date, status_selected)
+    df_filtered = filter_data(df, date_range, status_selected)
 
     # Pie chart untuk distribusi STATUS DT jika ada data
     if not df_filtered.empty:
