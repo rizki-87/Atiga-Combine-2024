@@ -38,6 +38,11 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     
     return df
     
+def show_filtered_table(df_filtered):
+    # Menggunakan Streamlit untuk menampilkan tabel data yang difilter
+    st.write("Tabel Data yang Difilter:")
+    st.dataframe(df_filtered)    
+    
 def show():
     st.markdown("""
         <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
@@ -69,10 +74,9 @@ def show():
             fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
             fig.update_traces(textinfo='percent+label+value')
             st.plotly_chart(fig)
+            show_filtered_table(df_filtered)  # Pemanggilan fungsi untuk menampilkan tabel
         else:
             st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
-        # Table rendering - This will appear below the pie chart
-        show_filtered_table(df_filtered)
     else:
         st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
