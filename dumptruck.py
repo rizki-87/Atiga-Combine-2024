@@ -10,17 +10,17 @@ from plotly.subplots import make_subplots
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
     try:
-        df = pd.read_csv(url, parse_dates=['TANGGAL'], dayfirst=True)
+        df = pd.read_csv(url)
+        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True)  # Pastikan parsing tanggal sesuai
         return df
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, date_range, status_dt_selected):
-    # Filter berdasarkan tanggal jika date_range diberikan
-    if date_range:
-        start_date, end_date = date_range
+def filter_data(df, start_date, end_date, status_dt_selected):
+    # Filter berdasarkan tanggal jika start_date dan end_date diberikan
+    if start_date and end_date:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
 
     # Filter berdasarkan status DT jika tidak 'All'
@@ -46,12 +46,17 @@ def show():
     # Inisialisasi container untuk input
     with st.container():
         # Input range tanggal dengan default hari ini
-        date_range = st.date_input("Pilih Tanggal", value=(pd.to_datetime('today'), pd.to_datetime('today')))
+        date_range = st.date_input("Pilih Tanggal", [])
+        if date_range:
+            start_date, end_date = date_range
+        else:
+            start_date = end_date = pd.to_datetime('today')
+
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
     # Proses filtering data
-    df_filtered = filter_data(df, date_range if len(date_range) == 2 else None, status_selected)
+    df_filtered = filter_data(df, start_date, end_date, status_selected)
 
     # Pie chart untuk distribusi STATUS DT jika ada data
     if not df_filtered.empty:
