@@ -66,6 +66,8 @@ def show():
             st.plotly_chart(fig)
         else:
             st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
+        # Table rendering - This will appear below the pie chart
+        show_filtered_table(df_filtered)
     else:
         st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
