@@ -7,32 +7,31 @@ from datetime import datetime
 # Fungsi untuk memuat data dari Google Sheets
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
-     try:
-         df = pd.read_csv(url, parse_dates=['TANGGAL'], dayfirst=True)
-         return df
-     except Exception as e:
-         st.error(f"Gagal memuat data: {e}")
-         return pd.DataFrame()
+    try:
+        df = pd.read_csv(url, parse_dates=['TANGGAL'], dayfirst=True)
+        return df
+    except Exception as e:
+        st.error(f"Gagal memuat data: {e}")
+        return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, min_date, max_date, jenis_dt_selected, status_dt_selected):
+def filter_data(df, min_date, max_date, status_dt_selected):
     # Konversi tanggal input ke pd.Timestamp
     min_date = pd.Timestamp(min_date)
     max_date = pd.Timestamp(max_date)
 
-    # Filter berdasarkan tanggal
-    df_filtered = df[
-        (df['TANGGAL'] >= min_date) &
-        (df['TANGGAL'] <= max_date)
-    ]
-
-    # Filter berdasarkan jenis DT jika bukan 'All'
-    if jenis_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['JENIS DT'] == jenis_dt_selected]
-
-    # Filter berdasarkan status DT jika bukan 'All'
+    # Filter berdasarkan tanggal dan status DT
     if status_dt_selected != 'All':
-        df_filtered = df_filtered[df_filtered['STATUS DT'] == status_dt_selected]
+        df_filtered = df[
+            (df['TANGGAL'] >= min_date) &
+            (df['TANGGAL'] <= max_date) &
+            (df['STATUS DT'] == status_dt_selected)
+        ]
+    else:
+        df_filtered = df[
+            (df['TANGGAL'] >= min_date) &
+            (df['TANGGAL'] <= max_date)
+        ]
     
     return df_filtered
 
@@ -45,31 +44,28 @@ def show():
         """, unsafe_allow_html=True)
 
     # URL Google Sheets untuk data Dump Truck
-    sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'  # Ganti dengan URL sesungguhnya
+    sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
     
     # Muat data
     df = load_data(sheet_url_dump_truck)
     
     # Inisialisasi container untuk input
     with st.container():
-        col1, col2, col3 = st.columns(3)
+        # Input tanggal
+        col1, col2 = st.columns(2)
         with col1:
-            min_date = st.date_input("Tanggal Mulai", datetime(2024, 1, 1))
-            max_date = st.date_input("Tanggal Akhir", datetime(2024, 12, 31))
+            min_date = st.date_input("Tanggal Mulai", datetime.now())
+            max_date = st.date_input("Tanggal Akhir", datetime.now())
         with col2:
             unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
             status_selected = st.selectbox('Pilih Status DT', ['All'] + unique_status)
-        with col3:
-            unique_jenis = df['JENIS DT'].unique().tolist() if not df.empty else []
-            jenis_selected = st.selectbox('Pilih Jenis DT', ['All'] + unique_jenis)
 
     # Proses filtering data
-    df_filtered = filter_data(df, min_date, max_date, jenis_selected, status_selected)
+    df_filtered = filter_data(df, min_date, max_date, status_selected)
 
     # Pie chart untuk distribusi STATUS DT jika ada data
     if not df_filtered.empty:
-        df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='count')
-        fig = px.pie(df_grouped, names='STATUS DT', values='count', title='Distribusi STATUS DT')
+        fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
         st.plotly_chart(fig)
     else:
         st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
