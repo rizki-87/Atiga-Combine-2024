@@ -15,14 +15,11 @@ def load_data(url):
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, date_range, status_dt_selected):
-    # Konversi range tanggal input ke pd.Timestamp
-    min_date, max_date = [pd.Timestamp(date) for date in date_range]
-
+def filter_data(df, start_date, end_date, status_dt_selected):
     # Filter berdasarkan tanggal
     df_filtered = df[
-        (df['TANGGAL'] >= min_date) &
-        (df['TANGGAL'] <= max_date)
+        (df['TANGGAL'] >= start_date) &
+        (df['TANGGAL'] <= end_date)
     ]
 
     # Filter berdasarkan status DT jika tidak 'All'
@@ -48,12 +45,12 @@ def show():
     # Inisialisasi container untuk input
     with st.container():
         # Input range tanggal
-        date_range = st.date_input("Pilih Tanggal", [])
+        start_date, end_date = st.date_input("Pilih Tanggal", [])
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
     # Proses filtering data
-    df_filtered = filter_data(df, date_range, status_selected)
+    df_filtered = filter_data(df, start_date, end_date, status_selected)
 
     # Pie chart untuk distribusi STATUS DT jika ada data
     if not df_filtered.empty:
@@ -66,6 +63,7 @@ def show():
 
 if __name__ == "__main__":
     show()
+
 ####################################################################################################################################
 
 # import time
