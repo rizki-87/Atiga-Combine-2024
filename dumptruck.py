@@ -15,13 +15,12 @@ def load_data(url):
 
 # Fungsi untuk filtering data
 def filter_data(df, start_date, end_date, status_dt_selected):
-    if start_date and end_date:
+    # Pemeriksaan tambahan untuk memastikan bahwa start_date dan end_date valid
+    if start_date is not None and end_date is not None:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
-
-    if status_dt_selected and 'All' not in status_dt_selected:
-        df = df[df['STATUS DT'].isin(status_dt_selected)]
-    
-    return df
+    else:
+        # Jika salah satu atau kedua tanggal tidak valid, return DataFrame kosong
+        return pd.DataFrame()
 
 # Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
 def show():
