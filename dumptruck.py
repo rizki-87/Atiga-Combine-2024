@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Fungsi untuk memuat data dari Google Sheets
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
     try:
@@ -13,7 +12,6 @@ def load_data(url):
         st.error(f"Gagal memuat data: {e}")
         return pd.DataFrame()
 
-# Fungsi untuk filtering data
 def filter_data(df, start_date, end_date, status_dt_selected):
     if start_date is not None and end_date is not None:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
@@ -23,7 +21,6 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 
     return df
 
-# Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
 def show():
     st.markdown("""
         <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
@@ -31,42 +28,38 @@ def show():
         </div>
         """, unsafe_allow_html=True)
 
-    # URL Google Sheets untuk data Dump Truck
-    sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
+    sheet_url_dump_truck = ''https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv''
 
-    # Muat data
     df = load_data(sheet_url_dump_truck)
 
-    # Inisialisasi container untuk input
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
-        start_date = date_range[0] if date_range else None
-        end_date = date_range[1] if len(date_range) > 1 else start_date
+        if len(date_range) == 1:
+            # Jika hanya satu tanggal yang dipilih, gunakan tanggal yang sama untuk start dan end date
+            start_date = end_date = date_range[0]
+        elif len(date_range) == 2:
+            start_date, end_date = date_range
+        else:
+            start_date = end_date = None
 
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
-        # Memastikan bahwa kita memiliki start_date dan end_date
-        if start_date and end_date:
-            df_filtered = filter_data(df, start_date, end_date, status_selected)
+    if start_date and end_date:
+        df_filtered = filter_data(df, start_date, end_date, status_selected)
 
-            # Pie chart untuk distribusi STATUS DT jika ada data
-            if not df_filtered.empty:
-                df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-                fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
-                fig.update_traces(textinfo='percent+label+value')
-                st.plotly_chart(fig)
-            else:
-                st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
+        if not df_filtered.empty:
+            df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
+            fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+            fig.update_traces(textinfo='percent+label+value')
+            st.plotly_chart(fig)
         else:
-            st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
+            st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
+    else:
+        st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
 if __name__ == "__main__":
     show()
-
-
-
-
 
 ####################################################################################################################################
 
