@@ -26,7 +26,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 
 def show_filtered_table(df_filtered):
     df_filtered = df_filtered.reset_index(drop=True)
-    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'PART YANG DIBUTUHKAN', 'LAMA BREAKDOWN (Days)']]
+    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'PART YANG DIBUTUHKAN','QTY','STATUS SPAREPART', 'LAMA BREAKDOWN (Days)']]
     st.dataframe(df_to_show)
 
 def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', status_value='Ready'):
