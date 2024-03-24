@@ -39,9 +39,10 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     return df
     
 def show_filtered_table(df_filtered):
-    # Menggunakan Streamlit untuk menampilkan tabel data yang difilter
-    st.write("Tabel Data yang Difilter:")
-    st.dataframe(df_filtered)    
+    # Pilih hanya kolom yang diinginkan
+    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'LAMA BREAKDOWN']]
+    # Menampilkan dataframe yang telah difilter
+    st.dataframe(df_to_show)  
     
 def show():
     st.markdown("""
