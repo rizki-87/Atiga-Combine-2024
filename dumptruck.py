@@ -14,11 +14,16 @@ def load_data(url):
         return pd.DataFrame()
 
 def filter_data(df, start_date, end_date, status_dt_selected):
-    # Konversi start_date dan end_date ke datetime jika mereka adalah tipe date
-    if type(start_date) is not pd.Timestamp:
-        start_date = pd.to_datetime(start_date)
-    if type(end_date) is not pd.Timestamp:
-        end_date = pd.to_datetime(end_date)
+    # Ensure start_date and end_date are Timestamps
+    start_date = pd.to_datetime(start_date).normalize()
+    end_date = pd.to_datetime(end_date).normalize()
+
+# def filter_data(df, start_date, end_date, status_dt_selected):
+#     # Konversi start_date dan end_date ke datetime jika mereka adalah tipe date
+#     if type(start_date) is not pd.Timestamp:
+#         start_date = pd.to_datetime(start_date)
+#     if type(end_date) is not pd.Timestamp:
+#         end_date = pd.to_datetime(end_date)
     
     # Menghilangkan baris dengan 'TANGGAL' NaT
     df = df.dropna(subset=['TANGGAL'])
