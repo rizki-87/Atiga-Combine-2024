@@ -6,6 +6,7 @@ import plotly.express as px
 def load_data(url):
     try:
         df = pd.read_csv(url)
+        # Konversi 'TANGGAL' ke datetime, membiarkan nilai tidak valid menjadi NaT
         df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True, errors='coerce')
         return df
     except Exception as e:
@@ -13,7 +14,16 @@ def load_data(url):
         return pd.DataFrame()
 
 def filter_data(df, start_date, end_date, status_dt_selected):
-    # Hanya filter berdasarkan tanggal jika kedua tanggal tidak None
+    # Memastikan start_date dan end_date dalam format datetime
+    if isinstance(start_date, str):
+        start_date = pd.to_datetime(start_date)
+    if isinstance(end_date, str):
+        end_date = pd.to_datetime(end_date)
+    
+    # Menghilangkan baris dengan 'TANGGAL' NaT
+    df = df.dropna(subset=['TANGGAL'])
+
+    # Filter berdasarkan tanggal
     if start_date is not None and end_date is not None:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
     
@@ -22,7 +32,6 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS DT'].isin(status_dt_selected)]
     
     return df
-
 def show():
     st.markdown("""
         <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
