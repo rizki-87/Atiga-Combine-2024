@@ -41,7 +41,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 # def show_filtered_table(df_filtered):
 #     # Pilih hanya kolom yang diinginkan dengan nama yang tepat
 #     try:
-#         df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
+#         df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN','JENIS KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
 #         st.dataframe(df_to_show)
 #     except KeyError as e:
 #         st.error(f'Kolom tidak ditemukan dalam DataFrame: {e}')
