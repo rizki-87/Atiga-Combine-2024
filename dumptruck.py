@@ -39,10 +39,14 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     return df
     
 def show_filtered_table(df_filtered):
-    # Pilih hanya kolom yang diinginkan
-    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'LAMA BREAKDOWN']]
-    # Menampilkan dataframe yang telah difilter
-    st.dataframe(df_to_show)  
+    # Menyesuaikan nama kolom sesuai dengan DataFrame yang dimuat
+    # Nama kolom case-sensitive dan harus sesuai dengan yang ada di DataFrame
+    try:
+        df_to_show = df_filtered[['No. DT', 'Level Kerusakan', 'Lama Breakdown']]
+        st.dataframe(df_to_show)  
+    except KeyError as e:
+        st.error(f'Kolom tidak ditemukan dalam DataFrame: {e}')
+        st.write('Kolom yang tersedia di DataFrame:', df_filtered.columns.tolist())  
     
 def show():
     st.markdown("""
