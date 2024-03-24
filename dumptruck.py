@@ -13,12 +13,14 @@ def load_data(url):
         return pd.DataFrame()
 
 def filter_data(df, start_date, end_date, status_dt_selected):
+    # Hanya filter berdasarkan tanggal jika kedua tanggal tidak None
     if start_date is not None and end_date is not None:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
-
+    
+    # Filter berdasarkan status DT jika tidak 'All'
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
-
+    
     return df
 
 def show():
@@ -34,13 +36,9 @@ def show():
 
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
-        if len(date_range) == 1:
-            # Jika hanya satu tanggal yang dipilih, gunakan tanggal yang sama untuk start dan end date
-            start_date = end_date = date_range[0]
-        elif len(date_range) == 2:
-            start_date, end_date = date_range
-        else:
-            start_date = end_date = None
+        # Jika hanya satu tanggal yang dipilih, gunakan tanggal yang sama untuk start dan end date
+        start_date = date_range[0] if date_range else None
+        end_date = date_range[1] if len(date_range) > 1 else start_date
 
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
