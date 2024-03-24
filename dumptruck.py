@@ -1,6 +1,10 @@
+import time
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from datetime import datetime
+import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 
 # Fungsi untuk memuat data dari Google Sheets
 @st.cache_resource(ttl=300, show_spinner=True)
