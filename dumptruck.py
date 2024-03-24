@@ -1,10 +1,14 @@
-import time
+# import time
+# import streamlit as st
+# import pandas as pd
+# import plotly.express as px
+# from datetime import datetime
+# import plotly.graph_objs as go
+# from plotly.subplots import make_subplots
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from datetime import datetime
-import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 
 # Fungsi untuk memuat data dari Google Sheets
 @st.cache_resource(ttl=300, show_spinner=True)
@@ -30,10 +34,13 @@ def load_data(url):
     
 #     return df
 
-def filter_data(df, start_date, end_date, status_dt_selected):
-    if start_date is not None and end_date is not None:
-        df = df[(df['TANGGAL'] >= pd.to_datetime(start_date)) & (df['TANGGAL'] <= pd.to_datetime(end_date))]
+def filter_data(df, date_range, status_dt_selected):
+    # Jika ada tanggal yang dipilih, gunakan untuk filter
+    if date_range:
+        start_date, end_date = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
+        df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
 
+    # Filter berdasarkan status DT jika tidak 'All'
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
     
@@ -55,13 +62,11 @@ def show():
 
     # Inisialisasi container untuk input
     with st.container():
-        # Ubah tipe input menjadi tuple atau None jika tidak ada input
-        date_range = st.date_input("Pilih Tanggal", [])
-        start_date, end_date = date_range if len(date_range) == 2 else (None, None)
+        # Input range tanggal dengan memperbaiki default value untuk menjadi range
+        today = pd.to_datetime('today')
+        date_range = st.date_input("Pilih Tanggal", [today, today])
         
-        if not date_range:
-            date_range = (pd.to_datetime('today'), pd.to_datetime('today'))  # Default ke hari ini jika tidak ada input
-
+        # Pilih status DT dengan multiselect
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
