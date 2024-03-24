@@ -50,7 +50,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 def show_filtered_table(df_filtered):
     # Setel indeks DataFrame ke None
     df_filtered = df_filtered.reset_index(drop=True)
-    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
+    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
     st.dataframe(df_to_show)
     
 def show():
