@@ -51,7 +51,7 @@ def show_filtered_table(df_filtered):
     # Setel indeks DataFrame ke None
     df_filtered = df_filtered.reset_index(drop=True)
     df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
-    st.dataframe(df_to_show)
+    st.dataframe(df_to_show, index=False)
     
 def show():
     st.markdown("""
