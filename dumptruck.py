@@ -5,8 +5,8 @@ import plotly.express as px
 from datetime import datetime
 
 # Fungsi untuk memuat data dari Google Sheets
- @st.cache_resource(ttl=300, show_spinner=True)
- def load_data(url):
+@st.cache_resource(ttl=300, show_spinner=True)
+def load_data(url):
      try:
          df = pd.read_csv(url, parse_dates=['TANGGAL'], dayfirst=True)
          return df
