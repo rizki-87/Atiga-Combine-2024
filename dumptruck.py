@@ -1,11 +1,3 @@
-# import time
-# import streamlit as st
-# import pandas as pd
-# import plotly.express as px
-# from datetime import datetime
-# import plotly.graph_objs as go
-# from plotly.subplots import make_subplots
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -22,28 +14,14 @@ def load_data(url):
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-# def filter_data(df, date_range, status_dt_selected):
-#     if date_range:
-#         start_date, end_date = date_range
-#         # Pastikan start_date dan end_date adalah tanggal yang valid sebelum filter
-#         if pd.notnull(start_date) and pd.notnull(end_date):
-#             df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+def filter_data(df, start_date, end_date, status_dt_selected):
+    if start_date and end_date:
+        # Pastikan start_date dan end_date adalah pd.Timestamp
+        df = df[(df['TANGGAL'] >= pd.Timestamp(start_date)) & (df['TANGGAL'] <= pd.Timestamp(end_date))]
 
-#     if status_dt_selected and 'All' not in status_dt_selected:
-#         df = df[df['STATUS DT'].isin(status_dt_selected)]
-    
-#     return df
-
-def filter_data(df, date_range, status_dt_selected):
-    # Jika ada tanggal yang dipilih, gunakan untuk filter
-    if date_range:
-        start_date, end_date = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
-        df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
-
-    # Filter berdasarkan status DT jika tidak 'All'
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
-    
+
     return df
 
 # Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
@@ -62,28 +40,37 @@ def show():
 
     # Inisialisasi container untuk input
     with st.container():
-        # Input range tanggal dengan memperbaiki default value untuk menjadi range
-        today = pd.to_datetime('today')
-        date_range = st.date_input("Pilih Tanggal", [today, today])
-        
-        # Pilih status DT dengan multiselect
+        date_range = st.date_input("Pilih Tanggal", [])
+        if date_range:
+            start_date, end_date = date_range
+        else:
+            start_date = end_date = None
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
-    # Proses filtering data
-    df_filtered = filter_data(df, date_range, status_selected)
+        # Jika tidak ada rentang tanggal yang dipilih, atur start_date dan end_date ke None
+        if len(date_range) != 2:
+            st.warning("Silakan pilih rentang tanggal.")
+            start_date = end_date = None
 
-    # Pie chart untuk distribusi STATUS DT jika ada data
-    if not df_filtered.empty:
-        df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-        fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
-        fig.update_traces(textinfo='percent+label+value')
-        st.plotly_chart(fig)
+    # Proses filtering data
+    if start_date and end_date:
+        df_filtered = filter_data(df, start_date, end_date, status_selected)
+
+        # Pie chart untuk distribusi STATUS DT jika ada data
+        if not df_filtered.empty:
+            df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
+            fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+            fig.update_traces(textinfo='percent+label+value')
+            st.plotly_chart(fig)
+        else:
+            st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
     else:
-        st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
+        st.info("Data tidak akan ditampilkan sampai tanggal dipilih.")
 
 if __name__ == "__main__":
     show()
+
 
 
 ####################################################################################################################################
