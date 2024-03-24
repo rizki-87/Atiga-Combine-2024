@@ -36,9 +36,12 @@ def show():
 
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
-        # Jika hanya satu tanggal yang dipilih, gunakan tanggal yang sama untuk start dan end date
-        start_date = date_range[0] if date_range else None
-        end_date = date_range[1] if len(date_range) > 1 else start_date
+        start_date = None
+        end_date = None
+        if len(date_range) == 1:
+            start_date = end_date = date_range[0]
+        elif len(date_range) == 2:
+            start_date, end_date = date_range
 
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
