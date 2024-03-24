@@ -14,10 +14,10 @@ def load_data(url):
         return pd.DataFrame()
 
 def filter_data(df, start_date, end_date, status_dt_selected):
-    # Memastikan start_date dan end_date dalam format datetime
-    if isinstance(start_date, str):
+    # Konversi start_date dan end_date ke datetime jika mereka adalah tipe date
+    if type(start_date) is not pd.Timestamp:
         start_date = pd.to_datetime(start_date)
-    if isinstance(end_date, str):
+    if type(end_date) is not pd.Timestamp:
         end_date = pd.to_datetime(end_date)
     
     # Menghilangkan baris dengan 'TANGGAL' NaT
@@ -32,6 +32,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS DT'].isin(status_dt_selected)]
     
     return df
+    
 def show():
     st.markdown("""
         <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
