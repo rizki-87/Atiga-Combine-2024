@@ -15,23 +15,19 @@ def load_data(url):
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, min_date, max_date, status_dt_selected):
-    # Konversi tanggal input ke pd.Timestamp
-    min_date = pd.Timestamp(min_date)
-    max_date = pd.Timestamp(max_date)
+def filter_data(df, date_range, status_dt_selected):
+    # Konversi range tanggal input ke pd.Timestamp
+    min_date, max_date = [pd.Timestamp(date) for date in date_range]
 
-    # Filter berdasarkan tanggal dan status DT
-    if status_dt_selected != 'All':
-        df_filtered = df[
-            (df['TANGGAL'] >= min_date) &
-            (df['TANGGAL'] <= max_date) &
-            (df['STATUS DT'] == status_dt_selected)
-        ]
-    else:
-        df_filtered = df[
-            (df['TANGGAL'] >= min_date) &
-            (df['TANGGAL'] <= max_date)
-        ]
+    # Filter berdasarkan tanggal
+    df_filtered = df[
+        (df['TANGGAL'] >= min_date) &
+        (df['TANGGAL'] <= max_date)
+    ]
+
+    # Filter berdasarkan status DT jika tidak 'All'
+    if 'All' not in status_dt_selected:
+        df_filtered = df_filtered[df_filtered['STATUS DT'].isin(status_dt_selected)]
     
     return df_filtered
 
@@ -51,28 +47,25 @@ def show():
     
     # Inisialisasi container untuk input
     with st.container():
-        # Input tanggal
-        col1, col2 = st.columns(2)
-        with col1:
-            min_date = st.date_input("Tanggal Mulai", datetime.now())
-            max_date = st.date_input("Tanggal Akhir", datetime.now())
-        with col2:
-            unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
-            status_selected = st.selectbox('Pilih Status DT', ['All'] + unique_status)
+        # Input range tanggal
+        date_range = st.date_input("Pilih Tanggal", [])
+        unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
+        status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
     # Proses filtering data
-    df_filtered = filter_data(df, min_date, max_date, status_selected)
+    df_filtered = filter_data(df, date_range, status_selected)
 
     # Pie chart untuk distribusi STATUS DT jika ada data
     if not df_filtered.empty:
-        fig = px.pie(df_filtered, names='STATUS DT', title='Distribusi STATUS DT')
+        df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
+        fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+        fig.update_traces(textinfo='percent+label+value')
         st.plotly_chart(fig)
     else:
         st.write("Tidak ada data yang sesuai dengan filter yang diberikan.")
 
 if __name__ == "__main__":
     show()
-
 ####################################################################################################################################
 
 # import time
