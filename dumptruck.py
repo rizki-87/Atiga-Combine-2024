@@ -48,10 +48,10 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 #         st.write('Kolom yang tersedia di DataFrame:', df_filtered.columns.tolist())
 
 def show_filtered_table(df_filtered):
-    # Pilih hanya kolom yang diinginkan dengan nama yang tepat
+    # Setel indeks DataFrame ke None
+    df_filtered = df_filtered.reset_index(drop=True)
     df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'LAMA BREAKDOWN (Days)']]
-    # Menampilkan dataframe yang telah difilter tanpa indeks
-    st.dataframe(df_to_show, index=False)
+    st.dataframe(df_to_show)
     
 def show():
     st.markdown("""
