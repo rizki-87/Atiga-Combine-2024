@@ -11,19 +11,28 @@ from plotly.subplots import make_subplots
 def load_data(url):
     try:
         df = pd.read_csv(url)
-        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True)  # Pastikan parsing tanggal sesuai
+        df['TANGGAL'] = pd.to_datetime(df['TANGGAL'], dayfirst=True, errors='coerce')  # Ubah format tanggal
         return df
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
         return pd.DataFrame()
 
 # Fungsi untuk filtering data
-def filter_data(df, date_range, status_dt_selected):
-    if date_range:
-        start_date, end_date = date_range
-        # Pastikan start_date dan end_date adalah tanggal yang valid sebelum filter
-        if pd.notnull(start_date) and pd.notnull(end_date):
-            df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+# def filter_data(df, date_range, status_dt_selected):
+#     if date_range:
+#         start_date, end_date = date_range
+#         # Pastikan start_date dan end_date adalah tanggal yang valid sebelum filter
+#         if pd.notnull(start_date) and pd.notnull(end_date):
+#             df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+
+#     if status_dt_selected and 'All' not in status_dt_selected:
+#         df = df[df['STATUS DT'].isin(status_dt_selected)]
+    
+#     return df
+
+def filter_data(df, start_date, end_date, status_dt_selected):
+    if start_date is not None and end_date is not None:
+        df = df[(df['TANGGAL'] >= pd.to_datetime(start_date)) & (df['TANGGAL'] <= pd.to_datetime(end_date))]
 
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS DT'].isin(status_dt_selected)]
@@ -46,8 +55,9 @@ def show():
 
     # Inisialisasi container untuk input
     with st.container():
-        # Input range tanggal dengan default hari ini
+        # Ubah tipe input menjadi tuple atau None jika tidak ada input
         date_range = st.date_input("Pilih Tanggal", [])
+        start_date, end_date = date_range if len(date_range) == 2 else (None, None)
         
         if not date_range:
             date_range = (pd.to_datetime('today'), pd.to_datetime('today'))  # Default ke hari ini jika tidak ada input
