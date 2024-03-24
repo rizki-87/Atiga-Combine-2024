@@ -15,12 +15,13 @@ def load_data(url):
 
 # Fungsi untuk filtering data
 def filter_data(df, start_date, end_date, status_dt_selected):
-    # Pemeriksaan tambahan untuk memastikan bahwa start_date dan end_date valid
     if start_date is not None and end_date is not None:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
-    else:
-        # Jika salah satu atau kedua tanggal tidak valid, return DataFrame kosong
-        return pd.DataFrame()
+
+    if status_dt_selected and 'All' not in status_dt_selected:
+        df = df[df['STATUS DT'].isin(status_dt_selected)]
+
+    return df
 
 # Fungsi utama untuk menampilkan halaman Monitoring Dump Truck
 def show():
@@ -39,34 +40,30 @@ def show():
     # Inisialisasi container untuk input
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
-        if len(date_range) == 2:
-            start_date, end_date = date_range
-        elif len(date_range) == 1:
-            start_date = end_date = date_range[0]
-        else:
-            start_date = end_date = None
+        start_date = date_range[0] if date_range else None
+        end_date = date_range[1] if len(date_range) > 1 else start_date
 
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
-        if not start_date or not end_date:
-            st.warning("Silakan pilih kedua tanggal awal dan akhir untuk range.")
+        # Memastikan bahwa kita memiliki start_date dan end_date
+        if start_date and end_date:
+            df_filtered = filter_data(df, start_date, end_date, status_selected)
 
-    # Proses filtering data
-    if start_date and end_date:
-        df_filtered = filter_data(df, start_date, end_date, status_selected)
-
-        # Pie chart untuk distribusi STATUS DT jika ada data
-        if not df_filtered.empty:
-            df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-            fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
-            fig.update_traces(textinfo='percent+label+value')
-            st.plotly_chart(fig)
+            # Pie chart untuk distribusi STATUS DT jika ada data
+            if not df_filtered.empty:
+                df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
+                fig = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+                fig.update_traces(textinfo='percent+label+value')
+                st.plotly_chart(fig)
+            else:
+                st.warning("Tidak ada data yang sesuai dengan filter yang diberikan.")
         else:
-            st.error("Tidak ada data yang sesuai dengan filter yang diberikan.")
+            st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
 if __name__ == "__main__":
     show()
+
 
 
 
