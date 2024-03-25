@@ -29,38 +29,84 @@ def show_filtered_table(df_filtered):
     df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'PART YANG DIBUTUHKAN','QTY','STATUS SPAREPART', 'LAMA BREAKDOWN (Days)']]
     st.dataframe(df_to_show)
 
-def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', status_value='Ready'):
-    # Group and resample the data
+# def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', status_value='Ready'):
+#     # Group and resample the data
+#     df_grouped = df_filtered.groupby([pd.Grouper(key=date_col, freq='D'), status_col]).size().unstack(fill_value=0)
+#     df_grouped['Total'] = df_grouped.sum(axis=1)
+    
+#     # Create subplots
+#     fig = make_subplots(specs=[[{"secondary_y": True}]])
+    
+#     # Add the bar chart for total count
+#     fig.add_trace(
+#         go.Bar(x=df_grouped.index, y=df_grouped['Total'], name='Total Trucks'),
+#         secondary_y=False,
+#     )
+    
+#     # Add the line chart for "Ready" status count
+#     if status_value in df_grouped.columns:
+#         fig.add_trace(
+#             go.Scatter(x=df_grouped.index, y=df_grouped[status_value], name='Ready Trucks', mode='lines'),
+#             secondary_y=True,
+#         )
+    
+#     # Set x-axis title
+#     fig.update_xaxes(title_text='Date')
+    
+#     # Set y-axes titles
+#     fig.update_yaxes(title_text='Total Trucks', secondary_y=False)
+#     fig.update_yaxes(title_text='Ready Trucks', secondary_y=True)
+    
+#     # Set layout for the title and legend
+#     fig.update_layout(
+#         title='Daily Status of Trucks',
+#         legend_title='Legend',
+#         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+#     )
+    
+#     return fig
+def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', ready_status='Ready', rusak_status='Rusak', rusak_berat_status='Rusak Berat'):
+    # Mengelompokkan dan menyampel ulang data berdasarkan hari
     df_grouped = df_filtered.groupby([pd.Grouper(key=date_col, freq='D'), status_col]).size().unstack(fill_value=0)
-    df_grouped['Total'] = df_grouped.sum(axis=1)
     
-    # Create subplots
+    # Membuat subplot
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-    
-    # Add the bar chart for total count
-    fig.add_trace(
-        go.Bar(x=df_grouped.index, y=df_grouped['Total'], name='Total Trucks'),
-        secondary_y=False,
-    )
-    
-    # Add the line chart for "Ready" status count
-    if status_value in df_grouped.columns:
+
+    # Menambahkan grafik batang untuk status 'Rusak'
+    if rusak_status in df_grouped:
         fig.add_trace(
-            go.Scatter(x=df_grouped.index, y=df_grouped[status_value], name='Ready Trucks', mode='lines'),
+            go.Bar(x=df_grouped.index, y=df_grouped[rusak_status], name=rusak_status, marker_color='orange'),
+            secondary_y=False,
+        )
+
+    # Menambahkan grafik batang untuk status 'Rusak Berat'
+    if rusak_berat_status in df_grouped:
+        fig.add_trace(
+            go.Bar(x=df_grouped.index, y=df_grouped[rusak_berat_status], name=rusak_berat_status, marker_color='red'),
+            secondary_y=False,
+        )
+    
+    # Menambahkan grafik garis untuk jumlah status 'Ready'
+    if ready_status in df_grouped.columns:
+        fig.add_trace(
+            go.Scatter(x=df_grouped.index, y=df_grouped[ready_status], name=ready_status, mode='lines', line=dict(color='green')),
             secondary_y=True,
         )
     
-    # Set x-axis title
-    fig.update_xaxes(title_text='Date')
-    
-    # Set y-axes titles
-    fig.update_yaxes(title_text='Total Trucks', secondary_y=False)
-    fig.update_yaxes(title_text='Ready Trucks', secondary_y=True)
-    
-    # Set layout for the title and legend
+    # Mengatur tumpukan grafik batang
+    fig.update_layout(barmode='stack')
+
+    # Mengatur judul sumbu x
+    fig.update_xaxes(title_text='Tanggal')
+
+    # Mengatur judul sumbu y
+    fig.update_yaxes(title_text='Jumlah Rusak & Rusak Berat', secondary_y=False)
+    fig.update_yaxes(title_text='Jumlah Ready', secondary_y=True)
+
+    # Mengatur layout untuk judul dan legenda
     fig.update_layout(
-        title='Daily Status of Trucks',
-        legend_title='Legend',
+        title='Status Harian Truk',
+        legend_title='Legenda',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     
@@ -95,10 +141,6 @@ def show():
 
         with col1:
             if not df_filtered.empty:
-                # df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-                # fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
-                # fig_pie.update_traces(textinfo='percent+label+value')
-                # st.plotly_chart(fig_pie)
                 # Define the colors for each status, ensuring 'Rusak Berat' is red
                 status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
                 df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
@@ -109,12 +151,16 @@ def show():
                 st.plotly_chart(fig_pie)
 
         with col2:
+            # if not df_filtered.empty:
+            #     fig_line_clustered = create_line_clustered_chart(df_filtered)
+            #     st.plotly_chart(fig_line_clustered, use_container_width=True)
+            # else:
+            #     st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
             if not df_filtered.empty:
-                fig_line_clustered = create_line_clustered_chart(df_filtered)
-                st.plotly_chart(fig_line_clustered, use_container_width=True)
-            else:
-                st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
-
+            fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
+            st.plotly_chart(fig_line_clustered, use_container_width=True)
+        else:
+            st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
         show_filtered_table(df_filtered)  # Displaying the filtered table
     else:
         st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
