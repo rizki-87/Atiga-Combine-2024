@@ -157,8 +157,8 @@ def show():
             # else:
             #     st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
             if not df_filtered.empty:
-            fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
-            st.plotly_chart(fig_line_clustered, use_container_width=True)
+                fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
+                st.plotly_chart(fig_line_clustered, use_container_width=True)
         else:
             st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
         show_filtered_table(df_filtered)  # Displaying the filtered table
