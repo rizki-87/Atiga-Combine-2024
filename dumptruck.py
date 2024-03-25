@@ -95,8 +95,16 @@ def show():
 
         with col1:
             if not df_filtered.empty:
+                # df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
+                # fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+                # fig_pie.update_traces(textinfo='percent+label+value')
+                # st.plotly_chart(fig_pie)
+                # Define the colors for each status, ensuring 'Rusak Berat' is red
+                status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
                 df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-                fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT')
+                colors = [status_colors[status] if status in status_colors else 'grey' for status in df_grouped['STATUS DT']]
+                
+                fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT', color_discrete_sequence=colors)
                 fig_pie.update_traces(textinfo='percent+label+value')
                 st.plotly_chart(fig_pie)
 
