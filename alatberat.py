@@ -13,6 +13,18 @@ def load_data(url):
     except Exception as e:
         st.error(f"Gagal memuat data: {e}")
         return pd.DataFrame()
+
+def filter_data(df, start_date, end_date, status_dt_selected):
+    start_date = pd.to_datetime(start_date).normalize()
+    end_date = pd.to_datetime(end_date).normalize()
+    df = df.dropna(subset=['TANGGAL'])
+    if start_date is not None and end_date is not None:
+        df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
+    if status_dt_selected and 'All' not in status_dt_selected:
+        df = df[df['STATUS AB'].isin(status_dt_selected)]
+    return df
+
+
 #############################################################################################################################################
 # import streamlit as st
 
