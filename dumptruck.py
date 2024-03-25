@@ -50,21 +50,21 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
 
 def create_stacked_bar_chart(df_filtered, brand_col='MEREK', status_col='STATUS DT'):
     # Group data by brand and status
-    df_grouped = df_filtered.groupby([brand_col, status_col]).size().unstack(fill_value=0)
-
-    # Create a bar chart
+    df_grouped = df_filtered.groupby([brand_col, status_col]).size().reset_index(name='Jumlah')
+    
+    # Create a stacked horizontal bar chart
     fig = px.bar(
         df_grouped,
-        x=df_grouped.index, 
-        y=df_grouped.columns, 
+        y=brand_col, 
+        x='Jumlah', 
+        color=status_col, 
         title='Distribusi Truk per Merek',
-        labels={'value':'Jumlah Truk', 'variable':'Status'},
-        text_auto=True
+        text='Jumlah'
     )
     
-    # Update layout for stacked bar chart
+    # Update layout to stack bars
     fig.update_layout(barmode='stack')
-    
+
     return fig
 
 def show():
