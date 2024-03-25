@@ -48,17 +48,24 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
     
     return fig
 
-def show_brand_cards(df_filtered, brand_col='MEREK'):
-    # Mendapatkan daftar merek unik
-    unique_brands = df_filtered[brand_col].unique()
+def create_stacked_bar_chart(df_filtered, brand_col='MEREK', status_col='STATUS DT'):
+    # Group data by brand and status
+    df_grouped = df_filtered.groupby([brand_col, status_col]).size().unstack(fill_value=0)
+
+    # Create a bar chart
+    fig = px.bar(
+        df_grouped,
+        x=df_grouped.index, 
+        y=df_grouped.columns, 
+        title='Distribusi Truk per Merek',
+        labels={'value':'Jumlah Truk', 'variable':'Status'},
+        text_auto=True
+    )
     
-    # Membuat container untuk setiap merek
-    for brand in unique_brands:
-        df_brand = df_filtered[df_filtered[brand_col] == brand]
-        with st.container():
-            st.write(f"### {brand}")  # Judul kartu
-            st.write("Jumlah Truk:", len(df_brand))
-            # Tambahkan informasi lainnya yang Anda ingin tampilkan dalam kartu
+    # Update layout for stacked bar chart
+    fig.update_layout(barmode='stack')
+    
+    return fig
 
 def show():
     st.markdown("""
@@ -97,7 +104,10 @@ def show():
 
         with col_mid:
             if not df_filtered.empty:
-                show_brand_cards(df_filtered, 'MEREK')  # Menampilkan kartu multi-row
+                fig_stacked_bar = create_stacked_bar_chart(df_filtered, 'MEREK', 'STATUS DT')
+                st.plotly_chart(fig_stacked_bar, use_container_width=True)
+            else:
+                st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik batang tumpuk.")
 
         with col3:
             if not df_filtered.empty:
