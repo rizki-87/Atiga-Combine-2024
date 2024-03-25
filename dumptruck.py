@@ -162,8 +162,8 @@ def show():
             else:
                 st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
             show_filtered_table(df_filtered)  # Displaying the filtered table
-        else:
-            st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
+            else:
+                st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
 if __name__ == "__main__":
     show()
