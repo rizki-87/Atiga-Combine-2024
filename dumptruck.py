@@ -30,13 +30,10 @@ def show_filtered_table(df_filtered):
     st.dataframe(df_to_show)
 
 def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', ready_status='Ready', rusak_status='Rusak', rusak_berat_status='Rusak Berat'):
-    # Group and resample the data by day
     df_grouped = df_filtered.groupby([pd.Grouper(key=date_col, freq='D'), status_col]).size().unstack(fill_value=0)
-    
-    # Create subplots
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-    # Add the bar chart for 'Rusak' and 'Rusak Berat' status
+    
+    # Add the bar charts for 'Rusak' and 'Rusak Berat' statuses
     for status, color in zip([rusak_status, rusak_berat_status], ['orange', 'red']):
         if status in df_grouped.columns:
             fig.add_trace(
@@ -44,24 +41,20 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
                 secondary_y=False,
             )
     
-    # Add the line chart for 'Ready' status
+    # Add the line chart for 'Ready' status and change the color to blue
     if ready_status in df_grouped.columns:
         fig.add_trace(
-            go.Scatter(x=df_grouped.index, y=df_grouped[ready_status], name=ready_status, mode='lines', line=dict(color='green')),
+            go.Scatter(x=df_grouped.index, y=df_grouped[ready_status], name=ready_status, mode='lines', line=dict(color='blue')),
             secondary_y=True,
         )
     
-    # Update layout for stacked bar chart
-    fig.update_layout(barmode='stack')
+    # If you want each status to have its own bar and not stacked, comment out the next line
+    # fig.update_layout(barmode='stack')
 
-    # Set x-axis title
     fig.update_xaxes(title_text='Tanggal')
-
-    # Set y-axes titles
     fig.update_yaxes(title_text='Jumlah Rusak & Rusak Berat', secondary_y=False)
     fig.update_yaxes(title_text='Jumlah Ready', secondary_y=True)
-
-    # Set layout for the title and legend
+    
     fig.update_layout(
         title='Status Harian Truk',
         legend_title='Legenda',
