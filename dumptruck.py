@@ -26,48 +26,31 @@ def filter_data(df, start_date, end_date, status_dt_selected):
 
 def show_filtered_table(df_filtered):
     df_filtered = df_filtered.reset_index(drop=True)
-    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'PART YANG DIBUTUHKAN','QTY','STATUS SPAREPART', 'LAMA BREAKDOWN (Days)']]
+    df_to_show = df_filtered[['NO DT', 'LEVEL KERUSAKAN', 'JENIS KERUSAKAN', 'PART YANG DIBUTUHKAN', 'QTY', 'STATUS SPAREPART', 'LAMA BREAKDOWN (Days)']]
     st.dataframe(df_to_show)
 
 def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STATUS DT', ready_status='Ready', rusak_status='Rusak', rusak_berat_status='Rusak Berat'):
     df_grouped = df_filtered.groupby([pd.Grouper(key=date_col, freq='D'), status_col]).size().unstack(fill_value=0)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     
-    # Add the bar charts for 'Rusak' and 'Rusak Berat' statuses
     for status, color in zip([rusak_status, rusak_berat_status], ['orange', 'red']):
         if status in df_grouped.columns:
-            fig.add_trace(
-                go.Bar(x=df_grouped.index, y=df_grouped[status], name=status, marker_color=color),
-                secondary_y=False,
-            )
+            fig.add_trace(go.Bar(x=df_grouped.index, y=df_grouped[status], name=status, marker_color=color), secondary_y=False)
     
-    # Add the line chart for 'Ready' status and change the color to blue
     if ready_status in df_grouped.columns:
-        fig.add_trace(
-            go.Scatter(x=df_grouped.index, y=df_grouped[ready_status], name=ready_status, mode='lines', line=dict(color='blue')),
-            secondary_y=True,
-        )
-    
-    # If you want each status to have its own bar and not stacked, comment out the next line
-    # fig.update_layout(barmode='stack')
+        fig.add_trace(go.Scatter(x=df_grouped.index, y=df_grouped[ready_status], name=ready_status, mode='lines', line=dict(color='blue')), secondary_y=True)
 
     fig.update_xaxes(title_text='Tanggal')
     fig.update_yaxes(title_text='Jumlah Rusak & Rusak Berat', secondary_y=False)
     fig.update_yaxes(title_text='Jumlah Ready', secondary_y=True)
     
-    fig.update_layout(
-        title='Status Harian Truk',
-        legend_title='Legenda',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
+    fig.update_layout(title='Status Harian Truk', legend_title='Legenda', legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
     
     return fig
-# Fungsi untuk membuat multi-row chart
+
 def create_multi_row_chart(df_filtered, merek_col='MEREK'):
     df_grouped = df_filtered.groupby(merek_col).size().reset_index(name='counts')
-    
     fig = px.bar(df_grouped, x='counts', y=merek_col, orientation='h', title='Distribusi Merek')
-    
     return fig
 
 def show():
@@ -93,38 +76,27 @@ def show():
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
-    # Definisikan status_colors di sini
-    status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
-
     if start_date and end_date:
-            df_filtered = filter_data(df, start_date, end_date, status_selected)
-            
-            # Menggunakan tiga kolom untuk pie chart, multi-row chart, dan line & clustered chart
-            col1, col2, col3 = st.columns([1,2,1]) # Asumsikan pie chart dan line & clustered chart lebih kecil dari multi-row chart
+        df_filtered = filter_data(df, start_date, end_date, status_selected)
 
+        col1, col_mid, col3 = st.columns([1, 2, 1])
         with col1:
             if not df_filtered.empty:
                 df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-                # Perbaikan: Gunakan status_colors yang telah didefinisikan
-                colors = [status_colors.get(status, 'grey') for status in df_grouped['STATUS DT']]
+                colors = ['blue' if status == 'Ready' else 'orange' if status == 'Rusak' else 'red' for status in df_grouped['STATUS DT']]
                 fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT', color_discrete_sequence=colors)
                 fig_pie.update_traces(textinfo='percent+label+value')
                 st.plotly_chart(fig_pie)
 
-        with col2:
-                # Memanggil fungsi untuk menampilkan multi-row chart
+        with col_mid:
             if not df_filtered.empty:
                 fig_multi_row = create_multi_row_chart(df_filtered, 'MEREK')
                 st.plotly_chart(fig_multi_row, use_container_width=True)
-            else:
-                st.warning("Tidak ada data untuk merek berdasarkan filter yang diberikan.")
-                    
+
         with col3:
             if not df_filtered.empty:
-                fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
+                fig_line_clustered = create_line_clustered_chart(df_filtered)
                 st.plotly_chart(fig_line_clustered, use_container_width=True)
-            else:
-                st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
 
         show_filtered_table(df_filtered)
     else:
