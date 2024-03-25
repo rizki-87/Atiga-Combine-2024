@@ -72,10 +72,10 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
 
 def show():
     st.markdown("""
-        <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
-            <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
-        </div>
-        """, unsafe_allow_html=True)
+    <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
+        <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Dump Truck</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
     sheet_url_dump_truck = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnflGSDkG_l9mSnawp-HEHX-R5jMfluS1rp0HlF_hMBpQvtG21d3-zPE4TxD80CvQVPjJszeOmNWJB/pub?gid=2078136743&single=true&output=csv'
 
@@ -93,6 +93,9 @@ def show():
         unique_status = df['STATUS DT'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 
+    # Definisikan status_colors di sini
+    status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
+
     if start_date and end_date:
         df_filtered = filter_data(df, start_date, end_date, status_selected)
         col1, col2 = st.columns(2)
@@ -100,14 +103,15 @@ def show():
         with col1:
             if not df_filtered.empty:
                 df_grouped = df_filtered.groupby('STATUS DT').size().reset_index(name='counts')
-                colors = [status_colors[status] if status in status_colors else 'grey' for status in df_grouped['STATUS DT']]
+                # Perbaikan: Gunakan status_colors yang telah didefinisikan
+                colors = [status_colors.get(status, 'grey') for status in df_grouped['STATUS DT']]
                 fig_pie = px.pie(df_grouped, names='STATUS DT', values='counts', title='Distribusi STATUS DT', color_discrete_sequence=colors)
                 fig_pie.update_traces(textinfo='percent+label+value')
                 st.plotly_chart(fig_pie)
 
         with col2:
             if not df_filtered.empty:
-                fig_line_clustered = create_line_clustered_chart(df_filtered)
+                fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
                 st.plotly_chart(fig_line_clustered, use_container_width=True)
             else:
                 st.warning("Tidak ada data yang sesuai dengan filter yang diberikan untuk grafik garis dan kolom.")
