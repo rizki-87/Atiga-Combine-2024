@@ -48,10 +48,17 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
     
     return fig
 
-def create_multi_row_chart(df_filtered, merek_col='MEREK'):
-    df_grouped = df_filtered.groupby(merek_col).size().reset_index(name='counts')
-    fig = px.bar(df_grouped, x='counts', y=merek_col, orientation='h', title='Distribusi Merek')
-    return fig
+def show_brand_cards(df_filtered, brand_col='MEREK'):
+    # Mendapatkan daftar merek unik
+    unique_brands = df_filtered[brand_col].unique()
+    
+    # Membuat container untuk setiap merek
+    for brand in unique_brands:
+        df_brand = df_filtered[df_filtered[brand_col] == brand]
+        with st.container():
+            st.write(f"### {brand}")  # Judul kartu
+            st.write("Jumlah Truk:", len(df_brand))
+            # Tambahkan informasi lainnya yang Anda ingin tampilkan dalam kartu
 
 def show():
     st.markdown("""
@@ -90,8 +97,7 @@ def show():
 
         with col_mid:
             if not df_filtered.empty:
-                fig_multi_row = create_multi_row_chart(df_filtered, 'MEREK')
-                st.plotly_chart(fig_multi_row, use_container_width=True)
+                show_brand_cards(df_filtered, 'MEREK')  # Menampilkan kartu multi-row
 
         with col3:
             if not df_filtered.empty:
