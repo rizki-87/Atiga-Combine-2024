@@ -62,6 +62,13 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
     )
     
     return fig
+# Fungsi untuk membuat multi-row chart
+def create_multi_row_chart(df_filtered, merek_col='MEREK'):
+    df_grouped = df_filtered.groupby(merek_col).size().reset_index(name='counts')
+    
+    fig = px.bar(df_grouped, x='counts', y=merek_col, orientation='h', title='Distribusi Merek')
+    
+    return fig
 
 def show():
     st.markdown("""
@@ -90,8 +97,10 @@ def show():
     status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
 
     if start_date and end_date:
-        df_filtered = filter_data(df, start_date, end_date, status_selected)
-        col1, col2 = st.columns(2)
+            df_filtered = filter_data(df, start_date, end_date, status_selected)
+            
+            # Menggunakan tiga kolom untuk pie chart, multi-row chart, dan line & clustered chart
+            col1, col2, col3 = st.columns([1,2,1]) # Asumsikan pie chart dan line & clustered chart lebih kecil dari multi-row chart
 
         with col1:
             if not df_filtered.empty:
@@ -103,6 +112,14 @@ def show():
                 st.plotly_chart(fig_pie)
 
         with col2:
+                # Memanggil fungsi untuk menampilkan multi-row chart
+                if not df_filtered.empty:
+                    fig_multi_row = create_multi_row_chart(df_filtered, 'MEREK')
+                    st.plotly_chart(fig_multi_row, use_container_width=True)
+                else:
+                    st.warning("Tidak ada data untuk merek berdasarkan filter yang diberikan.")
+                    
+        with col3:
             if not df_filtered.empty:
                 fig_line_clustered = create_line_clustered_chart(df_filtered, 'TANGGAL', 'STATUS DT', 'Ready', 'Rusak', 'Rusak Berat')
                 st.plotly_chart(fig_line_clustered, use_container_width=True)
