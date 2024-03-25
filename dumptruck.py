@@ -49,22 +49,29 @@ def create_line_clustered_chart(df_filtered, date_col='TANGGAL', status_col='STA
     return fig
 
 def create_stacked_bar_chart(df_filtered, brand_col='MEREK', status_col='STATUS DT'):
+    # Define the colors for each status
+    status_colors = {'Ready': 'blue', 'Rusak': 'orange', 'Rusak Berat': 'red'}
+
     # Group data by brand and status
-    df_grouped = df_filtered.groupby([brand_col, status_col]).size().reset_index(name='Jumlah')
+    df_grouped = df_filtered.groupby([brand_col, status_col]).size().reset_index(name='counts')
     
-    # Create a stacked horizontal bar chart
+    # Pivot the dataframe to have brands on rows and statuses on columns
+    df_pivot = df_grouped.pivot(index=brand_col, columns=status_col, values='counts').fillna(0)
+    
+    # Create a horizontal bar chart
     fig = px.bar(
-        df_grouped,
-        y=brand_col, 
-        x='Jumlah', 
-        color=status_col, 
+        df_pivot,
+        x=df_pivot.columns,
+        y=df_pivot.index,
+        orientation='h',
         title='Distribusi Truk per Merek',
-        text='Jumlah'
+        labels={'value':'Jumlah Truk', 'variable':'Status', brand_col:'Merek'},
+        color_discrete_map=status_colors
     )
     
-    # Update layout to stack bars
+    # Update layout for stacked bar chart
     fig.update_layout(barmode='stack')
-
+    
     return fig
 
 def show():
