@@ -113,11 +113,11 @@ def show():
 
         with col2:
                 # Memanggil fungsi untuk menampilkan multi-row chart
-                if not df_filtered.empty:
-                    fig_multi_row = create_multi_row_chart(df_filtered, 'MEREK')
-                    st.plotly_chart(fig_multi_row, use_container_width=True)
-                else:
-                    st.warning("Tidak ada data untuk merek berdasarkan filter yang diberikan.")
+            if not df_filtered.empty:
+                fig_multi_row = create_multi_row_chart(df_filtered, 'MEREK')
+                st.plotly_chart(fig_multi_row, use_container_width=True)
+            else:
+                st.warning("Tidak ada data untuk merek berdasarkan filter yang diberikan.")
                     
         with col3:
             if not df_filtered.empty:
