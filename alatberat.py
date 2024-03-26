@@ -52,6 +52,14 @@ def create_donut_chart(df, status_dt_selected):
                     start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
                     line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
 
+    # Add text labels to the wedges
+    labels = LabelSet(x=0, y=1, text='percentage', angle=cumsum('angle', include_zero=True),
+                      source=source, render_mode='canvas',
+                      x_offset=0, y_offset=-8,  # May need adjustment
+                      text_font_size="8pt", text_align="center", text_baseline="middle")
+
+    p.add_layout(labels)
+
     p.axis.axis_label = None
     p.axis.visible = False
     p.grid.grid_line_color = None
