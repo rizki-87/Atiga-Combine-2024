@@ -1,7 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import altair as alt
+from bokeh.plotting import figure
+from bokeh.transform import cumsum
+from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.palettes import Category20c
+import math
 
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
@@ -27,36 +31,37 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-def create_radial_chart(df, status_dt_selected):
-    # Ensure we're only dealing with the selected statuses
+def create_donut_chart(df, status_dt_selected):
+    # Filter based on the selected statuses if necessary
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
 
-    # Calculate counts and percentage
-    radial_df = df['STATUS AB'].value_counts().reset_index()
-    radial_df.columns = ['STATUS AB', 'count']
-    total = radial_df['count'].sum()
-    radial_df['percentage'] = (radial_df['count'] / total).map(lambda n: '{:.1%}'.format(n))
-    
-    # Create the Radial Chart
-    chart = alt.Chart(radial_df).mark_arc(innerRadius=50).encode(
-        theta=alt.Theta(field="count", type="quantitative", stack=True),
-        color=alt.Color(field="STATUS AB", type="nominal"),
-        tooltip=['STATUS AB', 'count', 'percentage']
-    ).properties(width=300, height=300)
+    # Calculate counts
+    data = df['STATUS AB'].value_counts().reset_index(name='count')
+    data.columns = ['STATUS AB', 'count']
+    data['angle'] = data['count'] / data['count'].sum() * 2 * math.pi
+    data['color'] = Category20c[len(data)]
+    data['percentage'] = (data['count'] / data['count'].sum() * 100).round(2).astype(str) + '%'
 
-    # Add text labels for the percentages
-    text = chart.mark_text(
-        radiusOffset=20,  # Adjust this value to move text in or out
-        align='center',
-        baseline='middle'
-    ).encode(
-        text='percentage:N',
-        theta=alt.Theta(field="count", type="quantitative", stack=True)
-    )
-    
-    # Combine the chart and the text
-    return chart + text
+    source = ColumnDataSource(data)
+
+    p = figure(plot_height=350, title="Distribusi Status Alat Berat", toolbar_location=None,
+               tools="hover", tooltips="@{STATUS AB}: @count (@percentage)", x_range=(-0.5, 1.0))
+
+    p.annular_wedge(x=0, y=1, inner_radius=0.2, outer_radius=0.4, direction="anticlock",
+                    start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
+                    line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
+
+    p.axis.axis_label = None
+    p.axis.visible = False
+    p.grid.grid_line_color = None
+
+    # Display the legend outside the plot area
+    p.legend.orientation = "horizontal"
+    p.legend.location = "top_center"
+    p.legend.label_text_font_size = "8pt"
+
+    return p
 
 
 # Main layout and logic
@@ -83,8 +88,8 @@ def show():
             # Call the create_radial_chart within the container after filters
             filtered_data = filter_data(df, start_date, end_date, status_selected)
             if not filtered_data.empty:
-                radial_chart = create_radial_chart(filtered_data, status_selected)
-                st.altair_chart(radial_chart, use_container_width=True)
+                donut_chart = create_donut_chart(filtered_data, status_selected)
+                st.bokeh_chart(donut_chart)
             else:
                 st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
 
