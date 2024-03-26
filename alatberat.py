@@ -38,7 +38,7 @@ def create_donut_chart(df, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
 
    # Calculate the midpoint angles of each wedge
-    data['mid_angle'] = (cumsum('angle', include_zero=True) + cumsum('angle'))/2
+    data['mid_angle'] = (data['angle'].cumsum(skipna=True) + data['angle'].cumsum(skipna=True).shift(-1))/2
 
     # Convert angles to radians for trigonometry
     data['mid_angle'] = data['mid_angle'] * pi / 180
