@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import altair as alt
 
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
@@ -23,6 +24,42 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
+
+def create_radial_chart(df, status_dt_selected):
+    # Filter data based on the selected status
+    if status_dt_selected and 'All' not in status_dt_selected:
+        df = df[df['STATUS AB'].isin(status_dt_selected)]
+
+    # Create a DataFrame suitable for a radial chart
+    radial_df = df['STATUS AB'].value_counts().reset_index()
+    radial_df.columns = ['STATUS AB', 'count']
+
+    # Create the Radial Chart
+    chart = alt.Chart(radial_df).mark_arc(innerRadius=50).encode(
+        theta=alt.Theta(field="count", type="quantitative"),
+        color=alt.Color(field="STATUS AB", type="nominal"),
+        tooltip=['STATUS AB', 'count']
+    ).properties(
+        width=300,
+        height=300
+    )
+    return chart
+
+def show_radial_chart(df, date_range, unique_status):
+    # Extracting the selected statuses if provided, otherwise using all available statuses
+    status_selected = st.multiselect(
+        'Pilih Status Alat Berat', 
+        ['All'] + unique_status, 
+        default=['All']
+    )
+    
+    # Filter data
+    filtered_data = filter_data(df, date_range[0], date_range[1], status_selected)
+    
+    # Creating and displaying Radial Chart
+    radial_chart = create_radial_chart(filtered_data, status_selected)
+    st.altair_chart(radial_chart, use_container_width=True)
+
 
 def show():
     st.markdown("""
