@@ -5,6 +5,7 @@ from bokeh.plotting import figure
 from bokeh.transform import cumsum
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.palettes import Category20c
+from bokeh.models import ColumnDataSource, LabelSet
 import math
 
 # Cache data loading
@@ -53,21 +54,11 @@ def create_donut_chart(df, status_dt_selected):
                     line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
 
     # Add text labels to the wedges
-    labels = LabelSet(x=0, y=1, text='percentage', angle=cumsum('angle', include_zero=True),
-                      source=source, render_mode='canvas',
-                      x_offset=0, y_offset=-8,  # May need adjustment
-                      text_font_size="8pt", text_align="center", text_baseline="middle")
+    labels = LabelSet(x=0, y=1, text='percentage', 
+                      angle=cumsum('angle', include_zero=True), 
+                      source=source, render_mode='canvas')
 
     p.add_layout(labels)
-
-    p.axis.axis_label = None
-    p.axis.visible = False
-    p.grid.grid_line_color = None
-
-    # Display the legend outside the plot area
-    p.legend.orientation = "horizontal"
-    p.legend.location = "top_center"
-    p.legend.label_text_font_size = "8pt"
 
     return p
 
