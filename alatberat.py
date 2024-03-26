@@ -26,7 +26,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-ef create_radial_chart(df, status_dt_selected):
+def create_radial_chart(df, status_dt_selected):
     # Ensure we're only dealing with the selected statuses
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
