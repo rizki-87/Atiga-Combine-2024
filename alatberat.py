@@ -34,6 +34,18 @@ def show():
     sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'
 
     df = load_data(sheet_url_alat_berat)
+
+    with st.container():
+        date_range = st.date_input("Pilih Tanggal", [])
+        start_date = None
+        end_date = None
+        if len(date_range) == 1:
+            start_date = end_date = date_range[0]
+        elif len(date_range) == 2:
+            start_date, end_date = date_range
+
+        unique_status = df['STATUS AB'].unique().tolist() if not df.empty else []
+        status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
 #############################################################################################################################################
 # import streamlit as st
 
