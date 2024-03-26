@@ -15,8 +15,10 @@ def load_data(url):
 
 # Data filtering function
 def filter_data(df, start_date, end_date, status_dt_selected):
-    start_date = pd.to_datetime(start_date).normalize()
-    end_date = pd.to_datetime(end_date).normalize()
+    if start_date:
+        start_date = pd.to_datetime(start_date).normalize()
+    if end_date:
+        end_date = pd.to_datetime(end_date).normalize()
     df = df.dropna(subset=['TANGGAL'])
     if start_date and end_date:
         df = df[(df['TANGGAL'] >= start_date) & (df['TANGGAL'] <= end_date)]
@@ -61,11 +63,15 @@ def show():
         else:
             # Call the create_radial_chart within the container after filters
             filtered_data = filter_data(df, start_date, end_date, status_selected)
-            radial_chart = create_radial_chart(filtered_data, status_selected)
-            st.altair_chart(radial_chart, use_container_width=True)
+            if not filtered_data.empty:
+                radial_chart = create_radial_chart(filtered_data, status_selected)
+                st.altair_chart(radial_chart, use_container_width=True)
+            else:
+                st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
 
 if __name__ == "__main__":
     show()
+
 
 #############################################################################################################################################################################
 
