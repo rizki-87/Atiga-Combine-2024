@@ -7,6 +7,7 @@ from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.palettes import Category20c
 from bokeh.models import ColumnDataSource, LabelSet
 import math
+from math import pi, cos, sin
 
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
@@ -38,14 +39,14 @@ def create_donut_chart(df, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
 
    # Calculate the midpoint angles of each wedge
-    data['mid_angle'] = (data['angle'].cumsum(skipna=True) + data['angle'].cumsum(skipna=True).shift(-1))/2
+    df['mid_angle'] = (df['angle'].cumsum(skipna=True) + df['angle'].cumsum(skipna=True).shift(-1)) / 2
 
     # Convert angles to radians for trigonometry
-    data['mid_angle'] = data['mid_angle'] * pi / 180
+    df['mid_angle'] = df['mid_angle'] * pi / 180
 
     # Calculate label positions using trigonometry
-    data['label_x'] = data['mid_angle'].apply(lambda ang: 0.3 * cos(ang))
-    data['label_y'] = data['mid_angle'].apply(lambda ang: 0.3 * sin(ang))
+    df['label_x'] = df['mid_angle'].apply(lambda ang: 0.3 * cos(ang))
+    df['label_y'] = df['mid_angle'].apply(lambda ang: 0.3 * sin(ang))
 
     source = ColumnDataSource(data)
 
