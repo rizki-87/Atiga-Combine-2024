@@ -57,7 +57,7 @@ def create_donut_chart(df, status_dt_selected):
                     line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
 
     # Add text labels to the wedges
-      labels = LabelSet(x='label_x', y='label_y', text='percentage', 
+    labels = LabelSet(x='label_x', y='label_y', text='percentage', 
                       source=source, render_mode='canvas',
                       text_align="center", text_baseline="middle")
 
