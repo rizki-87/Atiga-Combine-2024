@@ -38,18 +38,22 @@ def create_radial_chart(df, status_dt_selected):
     
     # Create the Radial Chart
     chart = alt.Chart(radial_df).mark_arc(innerRadius=50).encode(
-        theta=alt.Theta(field="count", type="quantitative"),
+        theta=alt.Theta(field="count", type="quantitative", stack=True),
         color=alt.Color(field="STATUS AB", type="nominal"),
         tooltip=['STATUS AB', 'count', 'percentage']
     ).properties(width=300, height=300)
     
     # Add text labels
-    text = chart.mark_text(radiusOffset=10).encode(
-        text='percentage',
-        theta=alt.Theta(field="count", type="quantitative")
+    text = chart.mark_text(radiusOffset=10, align='left', angle=0, fontWeight='bold').encode(
+        text='count:N',
+        theta=alt.Theta(field="count", type="quantitative", stack=True),
+        color=alt.value('black')  # Set text color to black (or any other color)
     )
     
-    return chart + text
+    # Combine the layers
+    layered_chart = chart + text
+    
+    return layered_chart
 
 
 # Main layout and logic
