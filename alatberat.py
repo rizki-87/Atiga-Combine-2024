@@ -45,7 +45,7 @@ def show():
             start_date, end_date = date_range
 
         unique_status = df['STATUS AB'].unique().tolist() if not df.empty else []
-        status_selected = st.multiselect('Pilih Status DT', ['All'] + unique_status, default=['All'])
+        status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
 #############################################################################################################################################
 # import streamlit as st
 
