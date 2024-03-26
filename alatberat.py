@@ -26,19 +26,31 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-# Radial chart function
 def create_radial_chart(df, status_dt_selected):
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
+    
+    # Calculate counts and percentage
     radial_df = df['STATUS AB'].value_counts().reset_index()
     radial_df.columns = ['STATUS AB', 'count']
-
+    total = radial_df['count'].sum()
+    radial_df['percentage'] = (radial_df['count'] / total).map(lambda n: '{:.1%}'.format(n))
+    
+    # Create the Radial Chart
     chart = alt.Chart(radial_df).mark_arc(innerRadius=50).encode(
         theta=alt.Theta(field="count", type="quantitative"),
         color=alt.Color(field="STATUS AB", type="nominal"),
-        tooltip=['STATUS AB', 'count']
+        tooltip=['STATUS AB', 'count', 'percentage']
     ).properties(width=300, height=300)
-    return chart
+    
+    # Add text labels
+    text = chart.mark_text(radiusOffset=10).encode(
+        text='percentage',
+        theta=alt.Theta(field="count", type="quantitative")
+    )
+    
+    return chart + text
+
 
 # Main layout and logic
 def show():
