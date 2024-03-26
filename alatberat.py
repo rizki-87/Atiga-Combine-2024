@@ -34,24 +34,25 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     return df
 
 def create_donut_chart(df, status_dt_selected):
-    # Filter based on the selected statuses if necessary
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
 
-   # Calculate the midpoint angles of each wedge
-    df['mid_angle'] = (df['angle'].cumsum(skipna=True) + df['angle'].cumsum(skipna=True).shift(-1)) / 2
+    # Calculate the count of each status and the proportion of each category
+    status_counts = df['STATUS AB'].value_counts()
+    df = pd.DataFrame({'STATUS AB': status_counts.index, 'count': status_counts.values})
+    df['angle'] = df['count']/df['count'].sum() * 2*pi  # Converts the count to angle in radians
 
-    # Convert angles to radians for trigonometry
+    # Now you can calculate 'mid_angle' as previously
+    df['mid_angle'] = (df['angle'].cumsum(skipna=True) - df['angle']/2)
     df['mid_angle'] = df['mid_angle'] * pi / 180
 
-    # Calculate label positions using trigonometry
     df['label_x'] = df['mid_angle'].apply(lambda ang: 0.3 * cos(ang))
     df['label_y'] = df['mid_angle'].apply(lambda ang: 0.3 * sin(ang))
 
-    source = ColumnDataSource(data)
+    source = ColumnDataSource(df)
 
     p = figure(plot_height=350, title="Distribusi Status Alat Berat", toolbar_location=None,
-               tools="hover", tooltips="@{STATUS AB}: @count (@percentage)", x_range=(-0.5, 1.0))
+               tools="hover", tooltips="@{STATUS AB}: @count", x_range=(-0.5, 1.0))
 
     p.annular_wedge(x=0, y=1, inner_radius=0.2, outer_radius=0.4, direction="anticlock",
                     start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
