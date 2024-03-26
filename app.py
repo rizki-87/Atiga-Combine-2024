@@ -22,7 +22,7 @@ def load_module(page_name):
 
 
 def main():
-    st.set_page_config(page_title='Dashboard Monitoring', page_icon="atiga.png", layout='wide')
+    st.set_page_config(page_title='Dashboard Monitoring', page_icon="logo atiga.jpg", layout='wide')
     st.sidebar.image('atiga.png', width=300)
     page = st.sidebar.radio('Pilih Halaman', ['Monitoring Dump Truck', 'Monitoring Alat Berat'])
 
