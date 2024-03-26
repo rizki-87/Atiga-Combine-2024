@@ -37,12 +37,15 @@ def create_donut_chart(df, status_dt_selected):
     if status_dt_selected and 'All' not in status_dt_selected:
         df = df[df['STATUS AB'].isin(status_dt_selected)]
 
-    # Calculate counts
-    data = df['STATUS AB'].value_counts().reset_index(name='count')
-    data.columns = ['STATUS AB', 'count']
-    data['angle'] = data['count'] / data['count'].sum() * 2 * math.pi
-    data['color'] = Category20c[len(data)]
-    data['percentage'] = (data['count'] / data['count'].sum() * 100).round(2).astype(str) + '%'
+   # Calculate the midpoint angles of each wedge
+    data['mid_angle'] = (cumsum('angle', include_zero=True) + cumsum('angle'))/2
+
+    # Convert angles to radians for trigonometry
+    data['mid_angle'] = data['mid_angle'] * pi / 180
+
+    # Calculate label positions using trigonometry
+    data['label_x'] = data['mid_angle'].apply(lambda ang: 0.3 * cos(ang))
+    data['label_y'] = data['mid_angle'].apply(lambda ang: 0.3 * sin(ang))
 
     source = ColumnDataSource(data)
 
@@ -54,9 +57,9 @@ def create_donut_chart(df, status_dt_selected):
                     line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
 
     # Add text labels to the wedges
-    labels = LabelSet(x=0, y=1, text='percentage', 
-                      angle=cumsum('angle', include_zero=True), 
-                      source=source, render_mode='canvas')
+      labels = LabelSet(x='label_x', y='label_y', text='percentage', 
+                      source=source, render_mode='canvas',
+                      text_align="center", text_baseline="middle")
 
     p.add_layout(labels)
 
