@@ -27,11 +27,6 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-# A function to calculate the angle for the text labels
-def calculate_angle(d):
-    total = d['count'].sum()
-    return (np.pi * (d['count'] / total).cumsum() / total).shift(fill_value=0) + (np.pi * d['count'] / total / 2)
-
 def create_radial_chart(df, status_dt_selected):
     # Ensure we're only dealing with the selected statuses
     if status_dt_selected and 'All' not in status_dt_selected:
@@ -43,29 +38,26 @@ def create_radial_chart(df, status_dt_selected):
     total = radial_df['count'].sum()
     radial_df['percentage'] = (radial_df['count'] / total).map(lambda n: '{:.1%}'.format(n))
     
-    # Calculate angles for the text labels
-    radial_df['angle'] = calculate_angle(radial_df)
-    
     # Create the Radial Chart
     chart = alt.Chart(radial_df).mark_arc(innerRadius=50).encode(
         theta=alt.Theta(field="count", type="quantitative", stack=True),
         color=alt.Color(field="STATUS AB", type="nominal"),
         tooltip=['STATUS AB', 'count', 'percentage']
     ).properties(width=300, height=300)
-    
+
     # Add text labels for the percentages
     text = chart.mark_text(
         radiusOffset=20,  # Adjust this value to move text in or out
         align='center',
-        baseline='middle',
-        angle=alt.Angle('angle', scale=None)  # Use the calculated angle for text labels
+        baseline='middle'
     ).encode(
-        text='percentage:N',  # Use 'percentage' for the text labels
+        text='percentage:N',
         theta=alt.Theta(field="count", type="quantitative", stack=True)
     )
     
     # Combine the chart and the text
     return chart + text
+
 
 # Main layout and logic
 def show():
