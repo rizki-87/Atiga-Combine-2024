@@ -37,9 +37,7 @@ def get_current_time_and_temp():
 
 # Main layout and logic
 def show():
-    # Set page config
-    st.set_page_config(page_title="Monitoring Ketersediaan dan Kondisi Alat Berat", layout="wide")
-
+   
     # Retrieve current time and temperature
     current_time, temperature = get_current_time_and_temp()
 
