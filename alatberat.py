@@ -68,19 +68,28 @@ def show():
             # Dot plot for 'MERK'
             merk_counts = filtered_df['MERK'].value_counts().reset_index()
             merk_counts.columns = ['MERK', 'count']
-            points = alt.Chart(merk_counts).mark_point(filled=True, opacity=1).encode(
-                x=alt.X('jitter:Q', title=None),
-                y=alt.Y('MERK:N', title="Merk Alat Berat", sort='-x'),
-                color='MERK:N',
-                tooltip=['MERK:N', 'count:Q']
-            ).transform_calculate(
-                jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
-            ).properties(
-                width=600,
-                height=400,
-                title="Distribusi Merk Alat Berat"
-            )
-            st.altair_chart(points, use_container_width=True)
+            vertical_bar_chart = alt.Chart(merk_counts).mark_bar().encode(
+            x=alt.X('MERK:N', title='Merk Alat Berat', sort='-y'),
+            y=alt.Y('count:Q', title='Jumlah'),
+            tooltip=['MERK:N', 'count:Q']
+        ).properties(
+            width=600,
+            height=400,
+            title="Distribusi Merk Alat Berat"
+        )
+            # points = alt.Chart(merk_counts).mark_point(filled=True, opacity=1).encode(
+            #     x=alt.X('jitter:Q', title=None),
+            #     y=alt.Y('MERK:N', title="Merk Alat Berat", sort='-x'),
+            #     color='MERK:N',
+            #     tooltip=['MERK:N', 'count:Q']
+            # ).transform_calculate(
+            #     jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
+            # ).properties(
+            #     width=600,
+            #     height=400,
+            #     title="Distribusi Merk Alat Berat"
+            # )
+           st.altair_chart(points, use_container_width=True)
 
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
