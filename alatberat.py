@@ -37,58 +37,58 @@ def get_current_time_and_temp():
 
 # Main layout and logic
     
-# def show():
-    
-#     # Retrieve current time and temperature
-#     current_time, temperature = get_current_time_and_temp()
-
-#     # Top row for title and metrics
-#     top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
-#     with top_col1:
-#         st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
-#     with top_col2:
-#         st.metric(label="Waktu Saat Ini", value=current_time)
-#     with top_col3:
-#         st.metric(label="Suhu Saat Ini", value=temperature)
-
 def show():
+    
     # Retrieve current time and temperature
     current_time, temperature = get_current_time_and_temp()
 
-    # Define styles for the container
-    container_style = """
-    <style>
-        .container {
-            border: 2px solid #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .title {
-            color: #ffffff;
-            font-size: 26px;
-        }
-        .metric {
-            padding: 0 10px;
-        }
-    </style>
-    """
-
-    # Apply container and title styles
-    st.markdown(container_style, unsafe_allow_html=True)
-    st.markdown('<div class="container">', unsafe_allow_html=True)
-    st.markdown('<div class="title">Monitoring Ketersediaan dan Kondisi Alat Berat</div>', unsafe_allow_html=True)
-
-    # Create columns for metrics
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        st.markdown('<div class="metric">', unsafe_allow_html=True)
+    # Top row for title and metrics
+    top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
+    with top_col1:
+        st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
+    with top_col2:
         st.metric(label="Waktu Saat Ini", value=current_time)
+    with top_col3:
         st.metric(label="Suhu Saat Ini", value=temperature)
-        st.markdown('</div>', unsafe_allow_html=True)
 
-    # Close the container div
-    st.markdown('</div>', unsafe_allow_html=True)
+# def show():
+#     # Retrieve current time and temperature
+#     current_time, temperature = get_current_time_and_temp()
+
+#     # Define styles for the container
+#     container_style = """
+#     <style>
+#         .container {
+#             border: 2px solid #f0f0f0;
+#             padding: 10px;
+#             border-radius: 5px;
+#             margin-bottom: 10px;
+#         }
+#         .title {
+#             color: #ffffff;
+#             font-size: 26px;
+#         }
+#         .metric {
+#             padding: 0 10px;
+#         }
+#     </style>
+#     """
+
+#     # Apply container and title styles
+#     st.markdown(container_style, unsafe_allow_html=True)
+#     st.markdown('<div class="container">', unsafe_allow_html=True)
+#     st.markdown('<div class="title">Monitoring Ketersediaan dan Kondisi Alat Berat</div>', unsafe_allow_html=True)
+
+#     # Create columns for metrics
+#     col1, col2 = st.columns([1, 4])
+#     with col1:
+#         st.markdown('<div class="metric">', unsafe_allow_html=True)
+#         st.metric(label="Waktu Saat Ini", value=current_time)
+#         st.metric(label="Suhu Saat Ini", value=temperature)
+#         st.markdown('</div>', unsafe_allow_html=True)
+
+#     # Close the container div
+#     st.markdown('</div>', unsafe_allow_html=True)
 
     sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
     df = load_data(sheet_url_alat_berat)
