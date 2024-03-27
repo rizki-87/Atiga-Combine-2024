@@ -37,19 +37,21 @@ def get_current_time_and_temp():
 
 # Main layout and logic
 def show():
-    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
-    df = load_data(sheet_url_alat_berat)
+    
     # Retrieve current time and temperature
     current_time, temperature = get_current_time_and_temp()
 
     # Top row for title and metrics
     top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
     with top_col1:
-        st.metric(label="Monitoring Ketersediaan dan Kondisi Alat Berat", value="")
+        st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
     with top_col2:
         st.metric(label="Waktu Saat Ini", value=current_time)
     with top_col3:
         st.metric(label="Suhu Saat Ini", value=temperature)
+
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
+    df = load_data(sheet_url_alat_berat)
 
     # Side-by-side layout for the date input and status multiselect
     col1, col2 = st.columns(2)
