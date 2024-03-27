@@ -1,28 +1,6 @@
 import streamlit as st
 import pandas as pd
-import pygal
-from pygal.style import Style
-import cairosvg
-from PIL import Image
-import io
-
-# Custom style for the half-pie chart
-custom_style = Style(
-    colors=('#E80080', '#404040', '#9BC850', '#D56541', '#6A5CFF'),
-    background='transparent'
-)
-
-# Function to create a half-pie chart with Pygal and convert it to a PIL image
-def create_half_pie(data, title):
-    pie_chart = pygal.Pie(half_pie=True, inner_radius=0.4, style=custom_style)
-    pie_chart.title = title
-    for status, count in data.items():
-        pie_chart.add(status, count)
-    
-    chart_svg = pie_chart.render()
-    chart_png = cairosvg.svg2png(bytestring=chart_svg)
-    image = Image.open(io.BytesIO(chart_png))
-    return image
+import altair as alt
 
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
@@ -56,7 +34,7 @@ def show():
     </div>
     """, unsafe_allow_html=True)
 
-    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Replace with your actual URL
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?output=csv'  # Replace with your actual URL
     df = load_data(sheet_url_alat_berat)
 
     with st.container():
@@ -67,17 +45,28 @@ def show():
         status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
 
         filtered_df = filter_data(df, start_date, end_date, status_selected)
-        status_counts = filtered_df['STATUS AB'].value_counts().to_dict()
 
-        if status_counts:
-            half_pie_chart = create_half_pie(status_counts, "Distribusi Status Alat Berat")
-            st.image(half_pie_chart, use_column_width=True)
+        if not filtered_df.empty:
+            # Prepare data for Altair chart
+            status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
+            status_counts.columns = ['STATUS AB', 'count']
+
+            # Create a horizontal bar chart
+            bar_chart = alt.Chart(status_counts).mark_bar().encode(
+                x='count:Q',
+                y=alt.Y('STATUS AB:N', sort='-x')  # Sort bars by count
+            ).properties(
+                width=600,
+                height=400,
+                title="Distribusi Status Alat Berat"
+            )
+
+            st.altair_chart(bar_chart, use_container_width=True)
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
 
 if __name__ == "__main__":
     show()
-
 
 #############################################################################################################################################################################
 
