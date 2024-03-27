@@ -27,6 +27,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
     return df
 
 # Main layout and logic
+# Main layout and logic
 def show():
     st.markdown("""
     <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
@@ -36,6 +37,11 @@ def show():
 
     sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?output=csv'  # Replace with your actual URL
     df = load_data(sheet_url_alat_berat)
+
+    # Verify that 'STATUS AB' is in the dataframe
+    if 'STATUS AB' not in df.columns:
+        st.error('Column STATUS AB does not exist in the data. Available columns: ' + ', '.join(df.columns))
+        return
 
     with st.container():
         date_range = st.date_input("Pilih Tanggal", [])
