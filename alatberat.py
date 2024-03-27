@@ -28,67 +28,24 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-# Define a function to get current time and temperature (this is just a placeholder)
-def get_current_time_and_temp():
-    # Assuming you would have a function that gets the temperature
-    current_time = datetime.now().astimezone(pytz.timezone("Asia/Jakarta")).strftime("%H:%M:%S")
-    temperature = "29°C"  # Placeholder temperature
-    return current_time, temperature
+# Fungsi untuk mendapatkan waktu saat ini di Jakarta
+def get_current_time():
+    tz_jakarta = pytz.timezone('Asia/Jakarta')
+    datetime_jakarta = datetime.now(tz_jakarta)
+    return datetime_jakarta.strftime('%A, %d %B %Y'), datetime_jakarta.strftime('%H:%M:%S')
 
 # Main layout and logic
     
 def show():
     
-    # Retrieve current time and temperature
-    current_time, temperature = get_current_time_and_temp()
-
-    # Top row for title and metrics
+     # Top row for title and metrics
     top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
     with top_col1:
-        st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
+        st.markdown("### Monitoring Ketersediaan dan Kondisi Alat Berat")
     with top_col2:
         st.metric(label="Waktu Saat Ini", value=current_time)
     with top_col3:
-        st.metric(label="Suhu Saat Ini", value=temperature)
-
-# def show():
-#     # Retrieve current time and temperature
-#     current_time, temperature = get_current_time_and_temp()
-
-#     # Define styles for the container
-#     container_style = """
-#     <style>
-#         .container {
-#             border: 2px solid #f0f0f0;
-#             padding: 10px;
-#             border-radius: 5px;
-#             margin-bottom: 10px;
-#         }
-#         .title {
-#             color: #ffffff;
-#             font-size: 26px;
-#         }
-#         .metric {
-#             padding: 0 10px;
-#         }
-#     </style>
-#     """
-
-#     # Apply container and title styles
-#     st.markdown(container_style, unsafe_allow_html=True)
-#     st.markdown('<div class="container">', unsafe_allow_html=True)
-#     st.markdown('<div class="title">Monitoring Ketersediaan dan Kondisi Alat Berat</div>', unsafe_allow_html=True)
-
-#     # Create columns for metrics
-#     col1, col2 = st.columns([1, 4])
-#     with col1:
-#         st.markdown('<div class="metric">', unsafe_allow_html=True)
-#         st.metric(label="Waktu Saat Ini", value=current_time)
-#         st.metric(label="Suhu Saat Ini", value=temperature)
-#         st.markdown('</div>', unsafe_allow_html=True)
-
-#     # Close the container div
-#     st.markdown('</div>', unsafe_allow_html=True)
+        st.metric(label="Tanggal", value=current_date)
 
     sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
     df = load_data(sheet_url_alat_berat)
