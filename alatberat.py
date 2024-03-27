@@ -5,7 +5,7 @@ from datetime import datetime
 import pytz
 
 # Cache data loading
-@st.cache(ttl=300, show_spinner=True)
+@st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
