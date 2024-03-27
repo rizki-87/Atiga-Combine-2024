@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
+# Page configuration at the very top of the file
+st.set_page_config(layout="wide", page_title="Monitoring Ketersediaan dan Kondisi Alat Berat")
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
