@@ -50,7 +50,7 @@ def show():
         status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
 
         filtered_df = filter_data(df, start_date, end_date, status_selected)
-         if not filtered_df.empty:
+        if not filtered_df.empty:
             # Bar chart for 'STATUS AB'
             status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
             status_counts.columns = ['STATUS AB', 'count']
