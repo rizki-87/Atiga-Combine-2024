@@ -54,13 +54,13 @@ def show():
 
         if not filtered_df.empty:
             # Prepare data for Altair chart
-            status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
-            status_counts.columns = ['STATUS AB', 'count']
+            status_counts = filtered_df['Status Alat Berat'].value_counts().reset_index()
+            status_counts.columns = ['Status Alat Berat', 'count']
 
             # Create a horizontal bar chart
             bar_chart = alt.Chart(status_counts).mark_bar().encode(
-                x='count:Q',
-                y=alt.Y('STATUS AB:N', sort='-x')  # Sort bars by count
+                x='Jumlah:Q',
+                y=alt.Y('Status Alat Berat:N', sort='-x')  # Sort bars by count
             ).properties(
                 width=600,
                 height=400,
