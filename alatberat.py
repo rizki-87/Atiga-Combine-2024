@@ -5,7 +5,7 @@ from datetime import datetime
 import pytz
 
 # Cache data loading
-@st.cache(ttl=300, show_spinner=True)
+@st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
@@ -37,7 +37,8 @@ def get_current_time_and_temp():
 
 # Main layout and logic
 def show():
-   
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
+    df = load_data(sheet_url_alat_berat)
     # Retrieve current time and temperature
     current_time, temperature = get_current_time_and_temp()
 
