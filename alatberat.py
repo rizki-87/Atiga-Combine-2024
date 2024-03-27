@@ -33,50 +33,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-def create_donut_chart(df, status_dt_selected):
-    if status_dt_selected and 'All' not in status_dt_selected:
-        df = df[df['STATUS AB'].isin(status_dt_selected)]
 
-    # Calculate the count of each status and the proportion of each category
-    status_counts = df['STATUS AB'].value_counts()
-    df = pd.DataFrame({'STATUS AB': status_counts.index, 'count': status_counts.values})
-    df['angle'] = df['count']/df['count'].sum() * 2*pi  # Converts the count to angle in radians
-
-    # Assuming you have less than 20 statuses, otherwise you'll need a larger palette or different handling.
-    n_statuses = len(df['STATUS AB'].unique())
-    color_palette = Category20c[n_statuses]
-
-    # Add a color column to df
-    df['color'] = [color_palette[i] for i in range(len(df))]
-
-    # Now you can calculate 'mid_angle' as previously
-    df['mid_angle'] = (df['angle'].cumsum(skipna=True) - df['angle']/2)
-    df['mid_angle'] = df['mid_angle'] * pi / 180
-
-    df['label_x'] = df['mid_angle'].apply(lambda ang: 0.3 * cos(ang))
-    df['label_y'] = df['mid_angle'].apply(lambda ang: 0.3 * sin(ang))
-
-    # After you've calculated the 'count' column
-    df['percentage'] = (df['count'] / df['count'].sum() * 100).apply(lambda p: f'{p:.2f}%')
-
-
-    source = ColumnDataSource(df)
-
-    p = figure(plot_height=350, title="Distribusi Status Alat Berat", toolbar_location=None,
-               tools="hover", tooltips="@{STATUS AB}: @count", x_range=(-0.5, 1.0))
-
-    p.annular_wedge(x=0, y=1, inner_radius=0.2, outer_radius=0.4, direction="anticlock",
-                start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
-                line_color="white", fill_color='color', legend_field='STATUS AB', source=source)
-
-    labels = LabelSet(x='label_x', y='label_y', text='percentage', 
-                  source=source, render_mode='canvas',
-                  text_align="center", text_baseline="middle")
-
-
-    p.add_layout(labels)
-
-    return p
 
 
 # Main layout and logic
@@ -99,14 +56,10 @@ def show():
 
         if df.empty:
             st.warning("Data tidak ditemukan.")
-        else:
-            # Call the create_radial_chart within the container after filters
-            filtered_data = filter_data(df, start_date, end_date, status_selected)
-            if not filtered_data.empty:
-                donut_chart = create_donut_chart(filtered_data, status_selected)
-                st.bokeh_chart(donut_chart)
             else:
                 st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
+     else:
+        st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
 
 if __name__ == "__main__":
     show()
