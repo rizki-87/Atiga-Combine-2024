@@ -26,7 +26,7 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-# Main layout and logic
+
 # Main layout and logic
 def show():
     st.markdown("""
@@ -50,12 +50,11 @@ def show():
         status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
 
         filtered_df = filter_data(df, start_date, end_date, status_selected)
-
-        if not filtered_df.empty:
+         if not filtered_df.empty:
             # Bar chart for 'STATUS AB'
             status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
             status_counts.columns = ['STATUS AB', 'count']
-            bar_chart = alt.Chart(status_counts).mark_bar().encode(
+            status_bar_chart = alt.Chart(status_counts).mark_bar().encode(
                 x=alt.X('count:Q', title='Jumlah'),
                 y=alt.Y('STATUS AB:N', sort='-x', title='Status Alat Berat')
             ).properties(
@@ -63,39 +62,72 @@ def show():
                 height=400,
                 title="Distribusi Status Alat Berat"
             )
-            st.altair_chart(bar_chart, use_container_width=True)
+            st.altair_chart(status_bar_chart, use_container_width=True)
 
-            # Dot plot for 'MERK'
+            # Vertical bar chart for 'MERK'
             merk_counts = filtered_df['MERK'].value_counts().reset_index()
             merk_counts.columns = ['MERK', 'count']
-            vertical_bar_chart = alt.Chart(merk_counts).mark_bar().encode(
-            x=alt.X('MERK:N', title='Merk Alat Berat', sort='-y'),
-            y=alt.Y('count:Q', title='Jumlah'),
-            tooltip=['MERK:N', 'count:Q']
-        ).properties(
-            width=600,
-            height=400,
-            title="Distribusi Merk Alat Berat"
-        )
-            # points = alt.Chart(merk_counts).mark_point(filled=True, opacity=1).encode(
-            #     x=alt.X('jitter:Q', title=None),
-            #     y=alt.Y('MERK:N', title="Merk Alat Berat", sort='-x'),
-            #     color='MERK:N',
-            #     tooltip=['MERK:N', 'count:Q']
-            # ).transform_calculate(
-            #     jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
-            # ).properties(
-            #     width=600,
-            #     height=400,
-            #     title="Distribusi Merk Alat Berat"
-            # )
-            st.altair_chart(points, use_container_width=True)
+            merk_bar_chart = alt.Chart(merk_counts).mark_bar().encode(
+                x=alt.X('MERK:N', title='Merk Alat Berat', sort='-y'),
+                y=alt.Y('count:Q', title='Jumlah'),
+                tooltip=['MERK:N', 'count:Q']
+            ).properties(
+                width=600,
+                height=400,
+                title="Distribusi Merk Alat Berat"
+            )
+            st.altair_chart(merk_bar_chart, use_container_width=True)
 
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
 
 if __name__ == "__main__":
     show()
+#         if not filtered_df.empty:
+#             # Bar chart for 'STATUS AB'
+#             status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
+#             status_counts.columns = ['STATUS AB', 'count']
+#             bar_chart = alt.Chart(status_counts).mark_bar().encode(
+#                 x=alt.X('count:Q', title='Jumlah'),
+#                 y=alt.Y('STATUS AB:N', sort='-x', title='Status Alat Berat')
+#             ).properties(
+#                 width=600,
+#                 height=400,
+#                 title="Distribusi Status Alat Berat"
+#             )
+#             st.altair_chart(bar_chart, use_container_width=True)
+
+#             # Dot plot for 'MERK'
+#             merk_counts = filtered_df['MERK'].value_counts().reset_index()
+#             merk_counts.columns = ['MERK', 'count']
+#             vertical_bar_chart = alt.Chart(merk_counts).mark_bar().encode(
+#             x=alt.X('MERK:N', title='Merk Alat Berat', sort='-y'),
+#             y=alt.Y('count:Q', title='Jumlah'),
+#             tooltip=['MERK:N', 'count:Q']
+#         ).properties(
+#             width=600,
+#             height=400,
+#             title="Distribusi Merk Alat Berat"
+#         )
+#             # points = alt.Chart(merk_counts).mark_point(filled=True, opacity=1).encode(
+#             #     x=alt.X('jitter:Q', title=None),
+#             #     y=alt.Y('MERK:N', title="Merk Alat Berat", sort='-x'),
+#             #     color='MERK:N',
+#             #     tooltip=['MERK:N', 'count:Q']
+#             # ).transform_calculate(
+#             #     jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
+#             # ).properties(
+#             #     width=600,
+#             #     height=400,
+#             #     title="Distribusi Merk Alat Berat"
+#             # )
+#             st.altair_chart(points, use_container_width=True)
+
+#         else:
+#             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
+
+# if __name__ == "__main__":
+#     show()
 
 #     # Verify that 'STATUS AB' is in the dataframe
 #     if 'STATUS AB' not in df.columns:
