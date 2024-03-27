@@ -36,85 +36,20 @@ def get_current_time_and_temp():
     return current_time, temperature
 
 # Main layout and logic
+    
 def show():
-    # # Custom CSS styles
-    # st.markdown("""
-    #     <style>
-    #         .big-font {
-    #             font-size:30px !important;
-    #             font-weight: bold;
-    #             color: #ffffff;
-    #             background-color: #323288;
-    #             padding: 10px;
-    #             border-radius: 10px;
-    #             margin-bottom: 20px;
-    #         }
-    #         .metric-label {
-    #             font-size: 16px;
-    #             font-weight: bold;
-    #             color: #999;
-    #         }
-    #         .metric-value {
-    #             font-size: 24px;
-    #             font-weight: bold;
-    #         }
-    #     </style>
-    # """, unsafe_allow_html=True)
-    st.markdown("""
-    <style>
-    .metric-box {
-    border-right: 2px solid #ffffff;
-    padding-right: 20px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-# def get_current_time_and_temp():
-#     # Assuming you would have a function that gets the temperature
-#     current_time = datetime.now().astimezone(pytz.timezone("Asia/Jakarta")).strftime("%H:%M:%S")
-#     temperature = "29°C"  # Placeholder temperature
-#     return current_time, temperature
-
-# Retrieve current time and temperature
-current_time, temperature = get_current_time_and_temp()
-
-# Top row for title and metrics
-top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
-with top_col1:
-    st.markdown('<p class="big-font">Monitoring Ketersediaan dan Kondisi Alat Berat</p>', unsafe_allow_html=True)
-with top_col2:
-    st.markdown('<div class="metric-box">', unsafe_allow_html=True)
-    st.metric("Waktu Saat Ini", current_time)
-    st.markdown('</div>', unsafe_allow_html=True)
-with top_col3:
-    st.metric("Suhu Saat Ini", temperature)
-
-    # # Display title with larger font
-    # st.markdown('<p class="big-font">Monitoring Ketersediaan dan Kondisi Alat Berat</p>', unsafe_allow_html=True)
-
-    # # Retrieve current time and temperature
-    # current_time, temperature = get_current_time_and_temp()
-
-    # # Metrics
-    # col1, col2 = st.columns([3, 1])
-    # with col1:
-    #     st.metric("Waktu Saat Ini", current_time)
-    #     st.metric("Suhu Saat Ini", temperature)
-    # with col2:
-    #     st.metric("", "")  # Spacer metric for alignment
     
-# def show():
-    
-#     # Retrieve current time and temperature
-#     current_time, temperature = get_current_time_and_temp()
+    # Retrieve current time and temperature
+    current_time, temperature = get_current_time_and_temp()
 
-#     # Top row for title and metrics
-#     top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
-#     with top_col1:
-#         st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
-#     with top_col2:
-#         st.metric(label="Waktu Saat Ini", value=current_time)
-#     with top_col3:
-#         st.metric(label="Suhu Saat Ini", value=temperature)
+    # Top row for title and metrics
+    top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
+    with top_col1:
+        st.markdown("## Monitoring Ketersediaan dan Kondisi Alat Berat", unsafe_allow_html=True)
+    with top_col2:
+        st.metric(label="Waktu Saat Ini", value=current_time)
+    with top_col3:
+        st.metric(label="Suhu Saat Ini", value=temperature)
 
 # def show():
 #     # Retrieve current time and temperature
