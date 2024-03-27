@@ -52,15 +52,34 @@ def show():
 
         filtered_df = filter_data(df, start_date, end_date, status_selected)
 
+        # if not filtered_df.empty:
+        #     # Prepare data for Altair chart
+        #     status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
+        #     status_counts.columns = ['STATUS AB', 'count']
+
+        #     # Create a horizontal bar chart
+        #     bar_chart = alt.Chart(status_counts).mark_bar().encode(
+        #         x='Jumlah:Q',
+        #         y=alt.Y('Status Alat Berat:N', sort='-x')  # Sort bars by count
+        #     ).properties(
+        #         width=600,
+        #         height=400,
+        #         title="Distribusi Status Alat Berat"
+        #     )
+
+        #     st.altair_chart(bar_chart, use_container_width=True)
+        # else:
+        #     st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
+
         if not filtered_df.empty:
             # Prepare data for Altair chart
             status_counts = filtered_df['STATUS AB'].value_counts().reset_index()
             status_counts.columns = ['STATUS AB', 'count']
 
-            # Create a horizontal bar chart
+            # Create a horizontal bar chart with corrected field names
             bar_chart = alt.Chart(status_counts).mark_bar().encode(
-                x='Jumlah:Q',
-                y=alt.Y('Status Alat Berat:N', sort='-x')  # Sort bars by count
+                x=alt.X('count:Q', title='Jumlah'),
+                y=alt.Y('STATUS AB:N', sort='-x', title='Status Alat Berat')
             ).properties(
                 width=600,
                 height=400,
