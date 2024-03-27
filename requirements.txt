@@ -5,3 +5,4 @@ plotly
 bokeh==2.4.3
 numpy
 pygal
+cairosvg
