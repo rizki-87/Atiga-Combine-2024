@@ -58,8 +58,7 @@ def show():
             st.warning("Data tidak ditemukan.")
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
-    else:
-     st.warning("Silakan pilih tanggal awal dan akhir untuk melihat data.")
+   
 
 if __name__ == "__main__":
     show()
