@@ -34,11 +34,13 @@ def show():
     </div>
     """, unsafe_allow_html=True)
 
-    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?output=csv'  # Replace with your actual URL
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Replace with your actual URL
     df = load_data(sheet_url_alat_berat)
 
-    if 'STATUS AB' not in df.columns or 'MERK' not in df.columns:
-        st.error('The required columns do not exist in the data.')
+    # Check if the required columns exist in the DataFrame
+    required_columns = ['STATUS AB', 'MERK']  # Adjust the actual column names if needed
+    if not all(column in df.columns for column in required_columns):
+        st.error(f"The required columns {required_columns} do not exist in the data.")
         return
 
     # Side-by-side layout for the date input and status multiselect
