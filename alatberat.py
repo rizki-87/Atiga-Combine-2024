@@ -1,13 +1,28 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-from bokeh.plotting import figure
-from bokeh.transform import cumsum
-from bokeh.models import ColumnDataSource, HoverTool
-from bokeh.palettes import Category20c
-from bokeh.models import ColumnDataSource, LabelSet
-import math
-from math import pi, cos, sin
+import pygal
+from pygal.style import Style
+import cairosvg
+from PIL import Image
+import io
+
+# Custom style for the half-pie chart
+custom_style = Style(
+    colors=('#E80080', '#404040', '#9BC850', '#D56541', '#6A5CFF'),
+    background='transparent'
+)
+
+# Function to create a half-pie chart with Pygal and convert it to a PIL image
+def create_half_pie(data, title):
+    pie_chart = pygal.Pie(half_pie=True, inner_radius=0.4, style=custom_style)
+    pie_chart.title = title
+    for status, count in data.items():
+        pie_chart.add(status, count)
+    
+    chart_svg = pie_chart.render()
+    chart_png = cairosvg.svg2png(bytestring=chart_svg)
+    image = Image.open(io.BytesIO(chart_png))
+    return image
 
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
@@ -33,9 +48,6 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-
-
-
 # Main layout and logic
 def show():
     st.markdown("""
@@ -44,7 +56,7 @@ def show():
     </div>
     """, unsafe_allow_html=True)
 
-    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Replace with your actual URL
     df = load_data(sheet_url_alat_berat)
 
     with st.container():
@@ -54,11 +66,14 @@ def show():
         unique_status = df['STATUS AB'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
 
-        if df.empty:
-            st.warning("Data tidak ditemukan.")
+        filtered_df = filter_data(df, start_date, end_date, status_selected)
+        status_counts = filtered_df['STATUS AB'].value_counts().to_dict()
+
+        if status_counts:
+            half_pie_chart = create_half_pie(status_counts, "Distribusi Status Alat Berat")
+            st.image(half_pie_chart, use_column_width=True)
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
-   
 
 if __name__ == "__main__":
     show()
