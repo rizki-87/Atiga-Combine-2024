@@ -5,7 +5,7 @@ from datetime import datetime
 import pytz
 
 # Cache data loading
-@st.cache_resource(ttl=300, show_spinner=True)
+@st.cache(ttl=300, show_spinner=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
@@ -28,17 +28,18 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
-# Fungsi untuk mendapatkan waktu saat ini di Jakarta
-def get_current_time():
+# Define a function to get current time in Jakarta
+def get_current_time_and_temp():
     tz_jakarta = pytz.timezone('Asia/Jakarta')
     datetime_jakarta = datetime.now(tz_jakarta)
     return datetime_jakarta.strftime('%A, %d %B %Y'), datetime_jakarta.strftime('%H:%M:%S')
 
 # Main layout and logic
-    
 def show():
-    
-     # Top row for title and metrics
+    # Call the function to get current time and temp
+    current_date, current_time = get_current_time_and_temp()
+
+    # Top row for title and metrics
     top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
     with top_col1:
         st.markdown("### Monitoring Ketersediaan dan Kondisi Alat Berat")
@@ -46,6 +47,10 @@ def show():
         st.metric(label="Waktu Saat Ini", value=current_time)
     with top_col3:
         st.metric(label="Tanggal", value=current_date)
+
+    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Replace with your actual URL
+    df = load_data(sheet_url_alat_berat)
+
 
     sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Ganti dengan URL yang sesungguhnya
     df = load_data(sheet_url_alat_berat)
