@@ -68,11 +68,11 @@ def show():
     }
     </style>
     """, unsafe_allow_html=True)
-def get_current_time_and_temp():
-    # Assuming you would have a function that gets the temperature
-    current_time = datetime.now().astimezone(pytz.timezone("Asia/Jakarta")).strftime("%H:%M:%S")
-    temperature = "29°C"  # Placeholder temperature
-    return current_time, temperature
+# def get_current_time_and_temp():
+#     # Assuming you would have a function that gets the temperature
+#     current_time = datetime.now().astimezone(pytz.timezone("Asia/Jakarta")).strftime("%H:%M:%S")
+#     temperature = "29°C"  # Placeholder temperature
+#     return current_time, temperature
 
 # Retrieve current time and temperature
 current_time, temperature = get_current_time_and_temp()
