@@ -89,7 +89,7 @@ def show():
             #     height=400,
             #     title="Distribusi Merk Alat Berat"
             # )
-           st.altair_chart(points, use_container_width=True)
+            st.altair_chart(points, use_container_width=True)
 
         else:
             st.warning("Tidak ada data yang sesuai dengan kriteria filter.")
