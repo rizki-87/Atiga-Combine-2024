@@ -1,13 +1,11 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+from datetime import datetime
+import pytz
 
-# # Page configuration at the very top of the file
-# st.set_page_config(layout="wide", page_title="Monitoring Ketersediaan dan Kondisi Alat Berat")
-# with open('style.css') as f:
-#     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 # Cache data loading
-@st.cache_resource(ttl=300, show_spinner=True)
+@st.cache(ttl=300, show_spinner=True)
 def load_data(url):
     try:
         df = pd.read_csv(url)
@@ -30,29 +28,34 @@ def filter_data(df, start_date, end_date, status_dt_selected):
         df = df[df['STATUS AB'].isin(status_dt_selected)]
     return df
 
+# Define a function to get current time and temperature (this is just a placeholder)
+def get_current_time_and_temp():
+    # Assuming you would have a function that gets the temperature
+    current_time = datetime.now().astimezone(pytz.timezone("Asia/Jakarta")).strftime("%H:%M:%S")
+    temperature = "29°C"  # Placeholder temperature
+    return current_time, temperature
+
 # Main layout and logic
 def show():
-    st.markdown("""
-    <div style="border: 2px solid #ddd; padding: 10px; text-align: center; background-color: #323288; border-radius: 0px;">
-        <h1 style="color: white; margin: 0;">Monitoring Ketersediaan dan Kondisi Alat Berat</h1>
-    </div>
-    """, unsafe_allow_html=True)
+    # Set page config
+    st.set_page_config(page_title="Monitoring Ketersediaan dan Kondisi Alat Berat", layout="wide")
 
-    sheet_url_alat_berat = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1vygEd5Ykxt7enZtJBCWIwO91FTb3mVbsRNvq2XlItosvT8ROsXwbou354QWZqY4p0eNtRM-bAESm/pub?gid=1149198834&single=true&output=csv'  # Replace with your actual URL
-    df = load_data(sheet_url_alat_berat)
+    # Retrieve current time and temperature
+    current_time, temperature = get_current_time_and_temp()
 
-    # Check if the required columns exist in the DataFrame
-    required_columns = ['STATUS AB', 'MERK']  # Adjust the actual column names if needed
-    if not all(column in df.columns for column in required_columns):
-        st.error(f"The required columns {required_columns} do not exist in the data.")
-        return
+    # Top row for title and metrics
+    top_col1, top_col2, top_col3 = st.columns([2, 1, 1])
+    with top_col1:
+        st.metric(label="Monitoring Ketersediaan dan Kondisi Alat Berat", value="")
+    with top_col2:
+        st.metric(label="Waktu Saat Ini", value=current_time)
+    with top_col3:
+        st.metric(label="Suhu Saat Ini", value=temperature)
 
     # Side-by-side layout for the date input and status multiselect
     col1, col2 = st.columns(2)
-
     with col1:
         date_range = st.date_input("Pilih Tanggal", [])
-
     with col2:
         unique_status = df['STATUS AB'].unique().tolist() if not df.empty else []
         status_selected = st.multiselect('Pilih Status Alat Berat', ['All'] + unique_status, default=['All'])
