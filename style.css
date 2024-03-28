@@ -1,7 +1,8 @@
 /* Add custom styles here */
 div[data-testid="metric-container"] {
-    border: 2px solid #f63366;
+    border: 3px solid #f63366; /* Warna border merah dan ketebalan 3px */
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
+    background-color: #f0f0f0; /* Warna background abu-abu muda */
 }
