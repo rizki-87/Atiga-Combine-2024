@@ -4,6 +4,10 @@ import altair as alt
 from datetime import datetime
 import pytz
 
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
 # Cache data loading
 @st.cache_resource(ttl=300, show_spinner=True)
 def load_data(url):
@@ -36,6 +40,8 @@ def get_current_time_and_temp():
 
 # Main layout and logic
 def show():
+    local_css("style.css")  # Call the function to apply your styles
+
     # Call the function to get current time and temp
     current_date, current_time = get_current_time_and_temp()
 
