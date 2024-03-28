@@ -1,1 +1,7 @@
-
+/* Add custom styles here */
+div[data-testid="metric-container"] {
+    border: 2px solid #f63366;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+}
