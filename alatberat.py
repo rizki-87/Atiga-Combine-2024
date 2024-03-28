@@ -40,7 +40,17 @@ def get_current_time_and_temp():
 
 # Main layout and logic
 def show():
-    local_css("style.css")  # Call the function to apply your styles
+    # local_css("style.css")  # Call the function to apply your styles
+    st.markdown("""
+        <style>
+        div[data-testid="metric-container"] {
+            border: 2px solid #f63366;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
     # Call the function to get current time and temp
     current_date, current_time = get_current_time_and_temp()
